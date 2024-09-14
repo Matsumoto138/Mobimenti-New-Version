@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Logging\**" />
+    <Compile Remove="ValidationRules\**" />
+    <EmbeddedResource Remove="Logging\**" />
+    <EmbeddedResource Remove="ValidationRules\**" />
+    <None Remove="Logging\**" />
+    <None Remove="ValidationRules\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MobimentiNewVersion.DataAccess\MobimentiNewVersion.DataAccess.csproj" />
+  </ItemGroup>
+
+</Project>

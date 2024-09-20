@@ -1,30 +1,19 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">MobimentiNewVersion</a>
-    </div>
-</div>
+﻿<RadzenStack Style="width:100%">
+	<RadzenRow AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center">
+		<RadzenColumn Size="3" Style="display:flex; justify-content:center">
+			<RadzenImage Style="width:200px" Path="https://mobimenti.co/static/media/Logo.f847b9c1a6036d2d487c.png" />
+	</RadzenColumn>
+	<RadzenColumn Size="6" Style="display:flex; justify-content:space-around" >
+			<RadzenLink Text="Ana Sayfa" Style="color: var(--darkFontColor)" />
+			<RadzenLink Text="Planlar" Style="color: var(--darkFontColor)" />
+			<RadzenLink Text="Hakkımızda" Style="color: var(--darkFontColor)" />
+			<RadzenLink Text="Mentorlarımız" Style="color: var(--darkFontColor)" />
+			<RadzenLink Text="İletişim" Style="color: var(--darkFontColor)" />
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
-
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
-            </NavLink>
-        </div>
-    </nav>
-</div>
+	</RadzenColumn>
+		<RadzenColumn Size="3" Style="display:flex; justify-content:center">
+		<RadzenButton Text="Kaydol" Variant="Variant.Outlined" class=".rz-border-color-primary" />
+	</RadzenColumn>
+	</RadzenRow>
+</RadzenStack>
 

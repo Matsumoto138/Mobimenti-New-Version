@@ -1,23 +1,30 @@
 ﻿@inherits LayoutComponentBase
 <RadzenComponents @rendermode="InteractiveServer" />
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
+<RadzenLayout Style="background:white">
+    <RadzenBody Style="width:90%; margin:0 auto; ">
+        @Body
+    </RadzenBody>
+    <RadzenFooter></RadzenFooter>
+</RadzenLayout>
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+<style>
+    :root{
+        --darkFontColor: #393939;
+        --blueFontColor: #2563EB;
+        --backgroundWhiteBlue: #EFF6FF;
+        --mainBlue: #579CF1;
+        --opaqueBlue: #2563EB;
+    }
 
-<div id="blazor-error-ui">
-    An unhandled error has occurred.
-    <a href="" class="reload">Reload</a>
-    <a class="dismiss">🗙</a>
-</div>
+    *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+        
+    }
+    body{
+        text-decoration: none;
+        list-style: none;
+    }
+</style>

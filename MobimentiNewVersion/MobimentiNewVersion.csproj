@@ -14,4 +14,9 @@
     <ProjectReference Include="..\MobimentiNewVersion.Business\MobimentiNewVersion.Business.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\image\BannerImage.png" />
+    <None Include="wwwroot\image\Logo.png" />
+  </ItemGroup>
+
 </Project>

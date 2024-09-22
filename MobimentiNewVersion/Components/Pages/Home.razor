@@ -1,8 +1,26 @@
 ﻿@page "/"
 @using MobimentiNewVersion.Components.Layout
 
-<RadzenStack Style="background: var(--backgroundWhiteBlue); padding:2rem; border-radius:20px">
+<RadzenStack Style="background: var(--backgroundWhiteBlue); border-radius:20px; height:auto" class="rz-m-sm-8 rz-p-sm-8 rz-p-4">
 	<RadzenRow><NavMenu /></RadzenRow>
+	<RadzenRow Style="margin:2rem 0">
+		<RadzenColumn SizeMD="5" Size="12" Order="2" OrderSM="1">
+			<RadzenRow><RadzenText TextStyle="TextStyle.DisplayH1" class="rz-font-25" Style="font-size:52px; font-weight:500">Kariyer yolculuğunda sana rehberlik edecek mentoru bul</RadzenText></RadzenRow>
+			<RadzenRow>
+				<RadzenText TextStyle="TextStyle.Subtitle1">
+					Mobimenti, kariyer yolculuğunuzu destekleyen bir mentor ağı oluşturuyor.
+					Mentorluk alarak daha etkin bir lider, geniş bir ağ ve güçlü bir kariyer inşa etmeye hazır ol!
+				</RadzenText>
+			</RadzenRow>
+			<RadzenRow Style="margin:1rem 0; flex-direction:column; width:40%">
+				<RadzenButton Text="Başlayın" Icon="arrow_right_alt" Variant="Variant.Filled" Style="border-radius:20px" />
+				<RadzenButton Text="Mentor Olmak İçin Başvur" Variant="Variant.Text" Style="font-size:10px; border-radius:20px" />
+			</RadzenRow>
+		</RadzenColumn>
+		<RadzenColumn SizeMD="7" Size="12" Order="1" OrderSM="2">
+			<RadzenImage Path="image/BannerImage.png" Style="width:100%" />
+		</RadzenColumn>
+	</RadzenRow>
 </RadzenStack>
 <RadzenStack></RadzenStack>
 <RadzenStack></RadzenStack>

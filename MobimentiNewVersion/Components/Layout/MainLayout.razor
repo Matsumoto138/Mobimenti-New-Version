@@ -1,8 +1,9 @@
 ﻿@inherits LayoutComponentBase
 <RadzenComponents @rendermode="InteractiveServer" />
+<RadzenNotification @rendermode="InteractiveServer" />
 
 <RadzenLayout Style="background:white">
-    <RadzenBody Style="width:90%; margin:0 auto; ">
+    <RadzenBody>
         @Body
     </RadzenBody>
     <RadzenFooter></RadzenFooter>
@@ -23,8 +24,9 @@
         box-sizing:border-box;
         
     }
-    body{
+    #radzen-main-body{
         text-decoration: none;
         list-style: none;
     }
+
 </style>

@@ -8,6 +8,13 @@ main {
     flex: 1;
 }
 
+#radzen-main-body {
+    text-decoration: none;
+    list-style: none;
+    width: 70%;
+    margin: 0 auto;
+}
+
 .sidebar {
     background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
 }

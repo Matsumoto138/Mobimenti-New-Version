@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Radzen.Blazor" Version="5.1.11" />
+    <PackageReference Include="WMBlazorSlickCarousel" Version="1.0.1" />
   </ItemGroup>
 
   <ItemGroup>

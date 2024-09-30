@@ -16,6 +16,7 @@ namespace MobimentiNewVersion.Business.Concrete
 
         public void Add(User entity)
         {
+             
             _userDal.Add(entity);
         }
 

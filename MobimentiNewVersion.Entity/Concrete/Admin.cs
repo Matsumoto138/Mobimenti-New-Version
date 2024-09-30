@@ -6,11 +6,7 @@ using System.Threading.Tasks;
 
 namespace MobimentiNewVersion.Entity.Concrete
 {
-    public class Admin:BaseEntity
+    public class Admin:BaseUser
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
-    }
+	}
 }

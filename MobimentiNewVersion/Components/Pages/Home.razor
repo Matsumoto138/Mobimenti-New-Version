@@ -1,27 +1,144 @@
 ﻿@page "/"
 @using MobimentiNewVersion.Components.Layout
 
-<RadzenStack Style="background: var(--backgroundWhiteBlue); border-radius:20px; height:auto" class="rz-m-sm-8 rz-p-sm-8 rz-p-4">
-	<RadzenRow><NavMenu /></RadzenRow>
-	<RadzenRow Style="margin:2rem 0">
-		<RadzenColumn SizeMD="5" Size="12" Order="2" OrderSM="1">
-			<RadzenRow><RadzenText TextStyle="TextStyle.DisplayH1" class="rz-font-25" Style="font-size:52px; font-weight:500">Kariyer yolculuğunda sana rehberlik edecek mentoru bul</RadzenText></RadzenRow>
-			<RadzenRow>
-				<RadzenText TextStyle="TextStyle.Subtitle1">
-					Mobimenti, kariyer yolculuğunuzu destekleyen bir mentor ağı oluşturuyor.
-					Mentorluk alarak daha etkin bir lider, geniş bir ağ ve güçlü bir kariyer inşa etmeye hazır ol!
-				</RadzenText>
-			</RadzenRow>
-			<RadzenRow Style="margin:1rem 0; flex-direction:column; width:40%">
-				<RadzenButton Text="Başlayın" Icon="arrow_right_alt" Variant="Variant.Filled" Style="border-radius:20px" />
-				<RadzenButton Text="Mentor Olmak İçin Başvur" Variant="Variant.Text" Style="font-size:10px; border-radius:20px" />
-			</RadzenRow>
-		</RadzenColumn>
-		<RadzenColumn SizeMD="7" Size="12" Order="1" OrderSM="2">
-			<RadzenImage Path="image/BannerImage.png" Style="width:100%" />
-		</RadzenColumn>
-	</RadzenRow>
+<RadzenStack class="rz-m-sm-8">
+	@* Banner *@
+	<RadzenStack Style="background: var(--backgroundWhiteBlue); border-radius:20px; height:auto" class="rz-mb-sm-2 rz-p-sm-8 rz-p-4">
+		<RadzenRow><NavMenu /></RadzenRow>
+		<RadzenRow Style="margin:2rem 0">
+			<RadzenColumn SizeMD="5" Size="12" Order="2" OrderSM="1">
+				<RadzenRow><RadzenText TextStyle="TextStyle.DisplayH1" class="rz-font-25" Style="font-size:52px; font-weight:500">Kariyer yolculuğunda sana rehberlik edecek mentoru bul</RadzenText></RadzenRow>
+				<RadzenRow>
+					<RadzenText TextStyle="TextStyle.Subtitle1">
+						Mobimenti, kariyer yolculuğunuzu destekleyen bir mentor ağı oluşturuyor.
+						Mentorluk alarak daha etkin bir lider, geniş bir ağ ve güçlü bir kariyer inşa etmeye hazır ol!
+					</RadzenText>
+				</RadzenRow>
+				<RadzenRow Style="margin:1rem 0; flex-direction:column; width:40%">
+					<RadzenButton Text="Başlayın" Icon="arrow_right_alt" Variant="Variant.Filled" Style="border-radius:20px" />
+					<RadzenButton Text="Mentor Olmak İçin Başvur" Variant="Variant.Text" Style="font-size:10px; border-radius:20px" />
+				</RadzenRow>
+			</RadzenColumn>
+			<RadzenColumn SizeMD="7" Size="12" Order="1" OrderSM="2">
+				<RadzenImage Path="image/BannerImage.png" Style="width:100%" />
+			</RadzenColumn>
+		</RadzenRow>
+	</RadzenStack>
+
+	@* HomePage Info Cards *@
+	<RadzenStack>
+		<RadzenRow class="rz-w-100 rz-p-sm-12" Gap="50">
+			<RadzenColumn Size="12" SizeXS="4">
+					<RadzenCard Variant="Variant.Filled" class="rz-mx-auto" Style="max-width: 420px; height:auto; min-height:180px; background:#F7F9FC; align-items:center; justify-content:center; display:flex">
+						<RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="1rem" class="rz-p-4">
+							<RadzenStack Style="width: 25%; margin:auto 0" >
+								<RadzenImage Path="icons/search.png" Style="object-fit:cover"/>
+							</RadzenStack>
+							<RadzenStack Gap="0">
+								<RadzenText TextStyle="TextStyle.Body1" Style="font-weight:500; color:var(--opaqueBlue)">Mentorları Keşfet</RadzenText>
+								<RadzenText TextStyle="TextStyle.Subtitle2" class="rz-display-flex rz-mt-2 rz-my-0">
+									Kariyer adımlarında ilerlemek
+									istediğin katagorideki
+									mentorları keşfet!
+								</RadzenText>
+							</RadzenStack>
+						</RadzenStack>
+					</RadzenCard>
+			</RadzenColumn>
+
+				<RadzenColumn Size="12" SizeXS="4">
+					<RadzenCard Variant="Variant.Filled" class="rz-mx-auto" Style="max-width: 420px; height:auto;min-height:180px; background:#F7F9FC; align-items:center; justify-content:center; display:flex">
+						<RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="1rem" class="rz-p-4">
+							<RadzenStack Style="width: 25%; margin:auto 0">
+								<RadzenImage Path="icons/choose.png" Style="object-fit:cover" />
+							</RadzenStack>
+							<RadzenStack Gap="0">
+								<RadzenText TextStyle="TextStyle.Body1" Style="font-weight:500; color:var(--opaqueBlue)">İncele ve Seç</RadzenText>
+								<RadzenText TextStyle="TextStyle.Subtitle2" class="rz-display-flex rz-mt-2 rz-my-0">
+									Mentorları incele ve
+									mentorunu seç!
+								</RadzenText>
+							</RadzenStack>
+						</RadzenStack>
+					</RadzenCard>
+			</RadzenColumn>
+
+				<RadzenColumn Size="12" SizeXS="4">
+					<RadzenCard Variant="Variant.Filled" class="rz-mx-auto" Style="max-width: 420px; height: auto;min-height:180px; background:#F7F9FC; align-items:center; justify-content:center; display:flex">
+						<RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="1rem" class="rz-p-4">
+							<RadzenStack Style="width: 25%; margin:auto 0">
+								<RadzenImage Path="icons/meeting.png" Style="object-fit:cover" />
+							</RadzenStack>
+							<RadzenStack Gap="0">
+								<RadzenText TextStyle="TextStyle.Body1" Style="font-weight:500; color:var(--opaqueBlue)">Randevu Al, Görüşmeye Başla!</RadzenText>
+								<RadzenText TextStyle="TextStyle.Subtitle2" class="rz-display-flex rz-mt-2 rz-my-0">
+									Mobimenti’den randevunu alarak mentorunla görüşmeye başla!
+								</RadzenText>
+							</RadzenStack>
+						</RadzenStack>
+					</RadzenCard>
+			</RadzenColumn>
+		
+			<RadzenColumn></RadzenColumn>
+			<RadzenColumn></RadzenColumn>
+		</RadzenRow>
+	</RadzenStack>
+
+	@* Mentor List *@
+	<RadzenStack Style="background: var(--mainBlue); border-radius:20px; height:auto" class="rz-mb-sm-2 rz-mt-sm-2 rz-p-sm-12 rz-p-4">
+		<RadzenRow>
+			<RadzenColumn Size="12" SizeSM="6"><RadzenText TextStyle="TextStyle.DisplayH3" Style="color:white">Profesyonel Mentor <br /> Ekibimizle Tanışın</RadzenText></RadzenColumn>
+			<RadzenColumn Size="12" SizeSM="5" class="rz-px-4">
+					<RadzenRow><RadzenText TextStyle="TextStyle.Subtitle2" Style="color:white">Kendi alanlarında lider olan mentorlerimizle, kariyerinizde güçlü adımlar atmaya hazır olun.</RadzenText></RadzenRow>
+					<RadzenRow><RadzenButton Text="Listele" Style="background:white; border-radius:20px 0 20px 20px; width:100px; color:var(--mainBlue); margin:10px 0" /></RadzenRow>
+			</RadzenColumn>
+		</RadzenRow>
+		<RadzenRow>
+				@* <RadzenCard Variant="Variant.Filled" class="rz-mx-auto" Style="width: 200px; height:auto; min-height:180px; background:#F7F9FC; align-items:center; justify-content:center; display:flex">
+					<RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="1rem" class="rz-p-4">
+						<RadzenStack Style="width: 25%; margin:auto 0">
+							<RadzenImage Path="icons/search.png" Style="object-fit:cover" />
+						</RadzenStack>
+						<RadzenStack Gap="0">
+							<RadzenText TextStyle="TextStyle.Body1" Style="font-weight:500; color:var(--opaqueBlue)">Mentorları Keşfet</RadzenText>
+							<RadzenText TextStyle="TextStyle.Subtitle2" class="rz-display-flex rz-mt-2 rz-my-0">
+								Kariyer adımlarında ilerlemek
+								istediğin katagorideki
+								mentorları keşfet!
+							</RadzenText>
+						</RadzenStack>
+					</RadzenStack>
+				</RadzenCard> *@
+				<RadzenText>Mentorlar</RadzenText>
+		</RadzenRow>
+	</RadzenStack>
+
+	@* Our Projects *@
+	<RadzenStack Style="width:90%; margin:0 auto">
+		<RadzenRow Gap="0">
+			<RadzenColumn Size="12" SizeSM="6" class="rz-p-4 rz-p-sm-12" Style="background:var(--backgroundWhiteBlue); border-radius:20px 0 0 20px">
+				<RadzenRow><RadzenText TextStyle="TextStyle.DisplayH3" >Projelerimize Göz Atın</RadzenText></RadzenRow>
+				<RadzenRow class="rz-my-4">
+					<RadzenCard>
+						<RadzenRow AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center">
+							<RadzenColumn Size="12" SizeSM="3"><RadzenImage Path="image/Projects_MentoringProgram.png" Style="width:100px" /></RadzenColumn>
+							<RadzenColumn Size="12" SizeSM="9"><RadzenText TextStyle="TextStyle.Body1">Mobimenti Mentorluk Programı: Young Change Maker Mentorluk Programı</RadzenText></RadzenColumn>
+						</RadzenRow>
+					</RadzenCard>
+				</RadzenRow>
+				<RadzenRow>
+					<RadzenCard>
+						<RadzenRow>
+							<RadzenColumn Size="12" SizeSM="9"><RadzenText TextStyle="TextStyle.Body1">Geleceğe Tutunan Eller: Üniversite Gençlerine Deprem Sonrası Uzman Rehberlik ve Destek Programı</RadzenText></RadzenColumn>
+							<RadzenColumn Size="12" SizeSM="3"><RadzenImage Path="image/Projects_CampusProject.png" Style="width:100px" /></RadzenColumn>
+						</RadzenRow>
+					</RadzenCard>
+				</RadzenRow>
+			</RadzenColumn>
+			<RadzenColumn Size="12" SizeSM="6" Style="background:var(--blueFontColor); border-radius:0 20px 20px 0">
+				
+			</RadzenColumn>
+			<RadzenImage Path="image/ProjectGirl.png" Style="position:absolute; width:40%; right:15%" class="rz-display-none rz-display-md-block" />
+		</RadzenRow>
+	</RadzenStack>
 </RadzenStack>
-<RadzenStack></RadzenStack>
-<RadzenStack></RadzenStack>
-<RadzenStack></RadzenStack>

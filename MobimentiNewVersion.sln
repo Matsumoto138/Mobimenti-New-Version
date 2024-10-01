@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MobimentiNewVersion.DataAcc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MobimentiNewVersion.Business", "MobimentiNewVersion.Business\MobimentiNewVersion.Business.csproj", "{D02AD09E-3388-4B78-AE2F-67F6D1845B24}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MobimentiNewVersion", "MobimentiNewVersion\MobimentiNewVersion.csproj", "{CB52443F-7748-4A85-B4D8-A80177A3E5CC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MobimentiNewVersion", "MobimentiNewVersion\MobimentiNewVersion.csproj", "{CB52443F-7748-4A85-B4D8-A80177A3E5CC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

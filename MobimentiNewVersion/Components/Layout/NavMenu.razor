@@ -1,10 +1,12 @@
-﻿<RadzenStack Style="width:100%">
+﻿@inject NavigationManager Navigation;
+
+<RadzenStack Style="width:100%">
 	<RadzenRow AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" >
 		<RadzenColumn Size="10" SizeMD="3" Style="display:flex; justify-content:start">
-			<RadzenImage Style="width:200px" Path="https://mobimenti.co/static/media/Logo.f847b9c1a6036d2d487c.png" />
+			<RadzenImage Click="@(() => Navigate("/"))" Style="width:200px; cursor:pointer" Path="https://mobimenti.co/static/media/Logo.f847b9c1a6036d2d487c.png" />
 	</RadzenColumn>
 		<RadzenColumn Size="0" SizeSM="6" Style="justify-content:space-around" class="rz-display-none rz-display-sm-flex">
-			<RadzenLink Text="Ana Sayfa" Style="color: var(--darkFontColor)" />
+			<RadzenLink Path="/" Text="Ana Sayfa" Style="color: var(--darkFontColor)" />
 			<RadzenLink Text="Planlar" Style="color: var(--darkFontColor)" />
 			<RadzenLink Text="Hakkımızda" Style="color: var(--darkFontColor)" />
 			<RadzenLink Text="Mentorlarımız" Style="color: var(--darkFontColor)" />
@@ -13,7 +15,7 @@
 	</RadzenColumn>
 		<RadzenColumn Size="2" SizeMD="3" Style="display:flex; justify-content:center" class="navbar-row">
 			<RadzenRow>
-				<RadzenButton Text="Kaydol" Variant="Variant.Outlined" class="rz-border-color-primary rz-display-none rz-display-sm-block" Style="border-radius:20px" />
+				<RadzenButton Click="@(() => Navigate("/user-login"))" Text="Kaydol" Variant="Variant.Text" Icon="login" class="rz-border-color-primary rz-display-none rz-display-sm-block" Style="border-radius:20px" />
 				<RadzenSidebarToggle Click="@SidebarExpand" class="rz-display-sm-none rz-color-black" />
 			</RadzenRow>
 	</RadzenColumn>
@@ -21,14 +23,13 @@
 	<RadzenSidebar Responsive="false" @bind-Expanded="@sidebar1Expanded" style="position: absolute">
 		<RadzenRow JustifyContent="JustifyContent.End" class="rz-mt-4"><RadzenButton Click="@SidebarExpand" Icon="highlight_off" Variant="Variant.Text" IconColor="@Colors.Black" Size="ButtonSize.Large" /></RadzenRow>
 		<RadzenPanelMenu>
-			<RadzenPanelMenuItem Text="Ana Sayfa" Icon="home" />
+			<RadzenPanelMenuItem Path="/" Text="Ana Sayfa" Icon="home" />
 			<RadzenPanelMenuItem Text="Planlar" Icon="sell" />
 			<RadzenPanelMenuItem Text="Hakkımızda" Icon="location_city" />
 			<RadzenPanelMenuItem Text="Mentorlarımız" Icon="diversity_3" />
 			<RadzenPanelMenuItem Text="İletişim" Icon="mail" />
+			<RadzenPanelMenuItem Path="/user-login" Text="Giriş Yap / Kaydol" Icon="login" Style="color:var(--mainBlue)" IconColor="var(--mainBlue)" />
 		</RadzenPanelMenu>
-		<RadzenRow JustifyContent="JustifyContent.Center" class="rz-mt-8"><RadzenImage Path="image/Logo.png" Style="width:80%; height:auto" /></RadzenRow>
-
 	</RadzenSidebar>
 </RadzenStack>
 
@@ -38,6 +39,11 @@
 	private void SidebarExpand()
 	{
 		sidebar1Expanded = !sidebar1Expanded;
+	}
+
+	private void Navigate(string path)
+	{
+		Navigation.NavigateTo(path);
 	}
 }
 

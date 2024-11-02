@@ -1,19 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using MobimentiNewVersion.Entity.Concrete;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace MobimentiNewVersion.DataAccess.Context
 {
     public class AppDbContext : DbContext
     {
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlServer("Server=DESKTOP-CV3DMKP;initial catalog=MobimentiDb;integrated security=true;TrustServerCertificate=True");
+        //}
+
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
-            optionsBuilder.UseSqlServer("Server=DESKTOP-CV3DMKP;initial catalog=MobimentiDb;integrated security=true;TrustServerCertificate=True");
         }
 
         public DbSet<Admin> Admins { get; set; }
@@ -24,6 +23,7 @@ namespace MobimentiNewVersion.DataAccess.Context
         public DbSet<Package> Packages { get; set; }
         public DbSet<Sale> Sales { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<MentorApplication> MentorApplications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

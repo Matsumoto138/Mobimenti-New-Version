@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,8 +15,9 @@ namespace MobimentiNewVersion.Entity.Concrete
         public byte[]? ProfilePicture { get; set; } = null;
         public string LinkedinAdress { get; set; } = string.Empty;
         public string School { get; set; } = string.Empty;
-		public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
-        public ICollection<Experience> Experiences { get; set; } = new List<Experience>();
-        public ICollection<DateTime> AvailableDates { get; set; } = new List<DateTime>();
+        public bool IsConfirmed { get; set; }
+        public List<Appointment> Appointments { get; set; } = new List<Appointment>();
+        public List<Experience> Experiences { get; set; } = new List<Experience>();
+        public List<DateTime> AvailableDates { get; set; } = new List<DateTime>();
     }
 }

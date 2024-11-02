@@ -1,0 +1,24 @@
+﻿@page "/mentee-dashboard/{id}"
+
+@using MobimentiNewVersion.Business.Abstract
+@using MobimentiNewVersion.Business.Concrete
+
+@inject NavigationManager Navigation
+@inject IAuthenticateService _authService;
+
+<h3>MenteeDashboard @Id</h3>
+<RadzenButton Click="Logout">Logout</RadzenButton>
+
+        
+
+
+@code {
+	[Parameter]
+	public string Id { get; set; }
+
+	private void Logout()
+	{
+		
+		Navigation.NavigateTo("/user-login");
+	}
+}

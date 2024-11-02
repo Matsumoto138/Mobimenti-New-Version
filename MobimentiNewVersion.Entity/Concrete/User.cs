@@ -8,13 +8,13 @@ namespace MobimentiNewVersion.Entity.Concrete
 {
     public class User : BaseUser
     {
-        public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
+        public List<Appointment> Appointments { get; set; } = new List<Appointment>();
 
         //Foreign Key
 
         public int? LicenceId { get; set; }
         public Licence Licence { get; set; }
 
-        public ICollection<Sale> Sales { get; set; }
+        public List<Sale> Sales { get; set; }
     }
 }

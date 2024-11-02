@@ -16,7 +16,7 @@ namespace MobimentiNewVersion.Business.Concrete
 
         public void Add(User entity)
         {
-             
+             entity.CreatedDate = DateTime.Now;
             _userDal.Add(entity);
         }
 

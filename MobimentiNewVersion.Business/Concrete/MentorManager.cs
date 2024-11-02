@@ -21,6 +21,7 @@ namespace MobimentiNewVersion.Business.Concrete
 
         public void Add(Mentor entity)
         {
+            entity.CreatedDate = DateTime.Now;
             _mentorDal.Add(entity);
         }
 

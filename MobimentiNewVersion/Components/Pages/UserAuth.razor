@@ -6,6 +6,8 @@
 @using MobimentiNewVersion.Entity
 @using MobimentiNewVersion.Entity.Concrete
 @using System.IdentityModel.Tokens.Jwt
+@using Microsoft.JSInterop;
+
 
 @inject NotificationService NotificationService
 @inject IJSRuntime JS
@@ -14,6 +16,7 @@
 
 @inject IUserService _userService;
 @inject IAuthenticateService _authService;
+@inject AuthenticationStateProvider AuthStateProvider;
 
 <RadzenStack class="rz-m-sm-8">
     <RadzenRow><NavMenu /></RadzenRow>
@@ -136,11 +139,12 @@
                     Duration = 4000
                 });
 
-            var handler = new JwtSecurityTokenHandler();
-            var jwtToken = handler.ReadJwtToken(result.Token);
-            var userId = jwtToken.Claims.First(claim => claim.Type == "nameid").Value;
-
-            Navigation.NavigateTo($"mentee-dashboard/" + userId);
+            if (AuthStateProvider is CustomAuthenticationStateProvider customAuthProvider)
+            {
+                customAuthProvider.MarkUserAsAuthenticated(result.Token);
+            }
+            await JS.InvokeVoidAsync("localStorage.setItem", "accessToken", result.Token);
+            Navigation.NavigateTo($"mentee-dashboard/" + result.Token);
         }
         else
         {

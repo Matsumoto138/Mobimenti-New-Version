@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using MobimentiNewVersion.Business.Abstract;
 using MobimentiNewVersion.Business.Concrete;
 using MobimentiNewVersion.Components;
@@ -8,6 +10,7 @@ using MobimentiNewVersion.DataAccess.Context;
 using MobimentiNewVersion.DataAccess.EntityFramework;
 using MobimentiNewVersion.DataAccess.Repositories;
 using Radzen;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,6 +47,20 @@ builder.Services.AddScoped<IPackageService, PackageManager>();
 builder.Services.AddScoped<ISaleService, SaleManager>();
 
 builder.Services.AddScoped<IAuthenticateService, AuthenticationService>();
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+builder.Services.AddAuthorizationCore();
+builder.Services.AddAuthentication("Bearer")
+	.AddJwtBearer("Bearer", options =>
+	{
+		options.TokenValidationParameters = new TokenValidationParameters
+		{
+			ValidateIssuer = false,
+			ValidateAudience = false,
+			ValidateLifetime = true,
+			ValidateIssuerSigningKey = true,
+			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("DLrbMfnZY4RPB6vBlZzswVkPizKFMgTv"))
+		};
+	});
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -63,6 +80,8 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseAntiforgery();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();

@@ -1,22 +1,16 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using MobimentiNewVersion.Business.Abstract;
 using MobimentiNewVersion.DataAccess.Abstract;
 using MobimentiNewVersion.Entity;
 using MobimentiNewVersion.Entity.Concrete;
 using MobimentiNewVersion.Entity.Result;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace MobimentiNewVersion.Business.Concrete
 {
-    public class AuthenticationService : IAuthenticateService
+	public class AuthenticationService : IAuthenticateService
 	{
 		private readonly IUserDal _userDal;
 		private readonly IMentorDal _mentorDal;

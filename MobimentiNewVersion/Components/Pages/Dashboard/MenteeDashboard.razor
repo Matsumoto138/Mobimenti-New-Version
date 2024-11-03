@@ -1,24 +1,51 @@
-﻿@page "/mentee-dashboard/{id}"
+﻿@page "/mentee-dashboard/{token}"
 
 @using MobimentiNewVersion.Business.Abstract
 @using MobimentiNewVersion.Business.Concrete
+@using System.IdentityModel.Tokens.Jwt
 
 @inject NavigationManager Navigation
 @inject IAuthenticateService _authService;
+@inject AuthenticationStateProvider AuthStateProvider;
+@inject IJSRuntime JS
 
-<h3>MenteeDashboard @Id</h3>
+
+<AuthorizeView>
+<h3>MenteeDashboard @userId</h3>
 <RadzenButton Click="Logout">Logout</RadzenButton>
+
+</AuthorizeView>
 
         
 
 
 @code {
 	[Parameter]
-	public string Id { get; set; }
+	public string Token { get; set; }
 
-	private void Logout()
+	private string userId;
+
+	protected override async Task OnInitializedAsync()
 	{
-		
+		if (string.IsNullOrWhiteSpace(Token))
+		{
+			// Token boş, yönlendir veya hata göster
+			Navigation.NavigateTo("/user-login");
+			return;
+		}
+
+		var handler = new JwtSecurityTokenHandler();
+		var jwtToken = handler.ReadJwtToken(Token);
+		userId = jwtToken.Claims.First(claim => claim.Type == "nameid").Value;
+	}
+
+	private async Task Logout()
+	{
+		if (AuthStateProvider is CustomAuthenticationStateProvider customAuthProvider)
+		{
+			customAuthProvider.MarkUserAsLoggedOut();
+		}
+		await JS.InvokeVoidAsync("localStorage.removeItem", "accessToken");
 		Navigation.NavigateTo("/user-login");
 	}
 }

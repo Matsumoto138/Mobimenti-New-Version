@@ -3,27 +3,31 @@
 @using MobimentiNewVersion.Business.Abstract
 @using MobimentiNewVersion.Business.Concrete
 @using System.IdentityModel.Tokens.Jwt
+@using MobimentiNewVersion.Components.Layout
+@using MobimentiNewVersion.Entity.Concrete
 
 @inject NavigationManager Navigation
-@inject IAuthenticateService _authService;
 @inject AuthenticationStateProvider AuthStateProvider;
+@inject IAuthenticateService _authService;
+@inject IUserService _userService;
 @inject IJSRuntime JS
 
+<RadzenLayout Style="grid-template-areas: 'rz-sidebar rz-header' 'rz-sidebar rz-body'">
+	<UserDashboardSidebarLayout />
+	<RadzenBody>
+		<RadzenStack><RadzenText>Hoşgeldin @user.FirstName,</RadzenText></RadzenStack>
 
-<AuthorizeView>
-<h3>MenteeDashboard @userId</h3>
-<RadzenButton Click="Logout">Logout</RadzenButton>
+		@* User Cards *@
 
-</AuthorizeView>
-
-        
-
+	</RadzenBody>
+</RadzenLayout>
 
 @code {
 	[Parameter]
 	public string Token { get; set; }
 
 	private string userId;
+	User user = new User();
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -37,7 +41,10 @@
 		var handler = new JwtSecurityTokenHandler();
 		var jwtToken = handler.ReadJwtToken(Token);
 		userId = jwtToken.Claims.First(claim => claim.Type == "nameid").Value;
+		user = _userService.GetById(Convert.ToInt32(userId));
 	}
+
+
 
 	private async Task Logout()
 	{

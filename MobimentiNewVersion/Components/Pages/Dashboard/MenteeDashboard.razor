@@ -15,10 +15,114 @@
 <RadzenLayout Style="grid-template-areas: 'rz-sidebar rz-header' 'rz-sidebar rz-body'">
 	<UserDashboardSidebarLayout />
 	<RadzenBody>
-		<RadzenStack><RadzenText>Hoşgeldin @user.FirstName,</RadzenText></RadzenStack>
+		<RadzenStack>
+			<RadzenStack><RadzenText TextStyle="TextStyle.DisplayH4">Hoşgeldin @user.FirstName,</RadzenText></RadzenStack>
 
-		@* User Cards *@
+			@* User Cards *@
+			<RadzenStack>
+				<RadzenCardGroup Responsive="true" >
+				@* User Cards/Randevu Oluştur *@
+				<RadzenCard Variant="Variant.Filled" Style="display:flex; align-items:center; gap:10px; cursor:pointer">
+					<RadzenColumn Size="5"><RadzenImage Path="icons/CreateAppointmentIcon.png" Style="width:50px" /></RadzenColumn>
+					<RadzenColumn Size="7"><RadzenText TextStyle="TextStyle.Subtitle1">Randevu Oluştur</RadzenText></RadzenColumn>
+				</RadzenCard>
+				@* User Cards/Toplam Görüşme *@
+				<RadzenCard Variant="Variant.Filled" Style="display:flex; align-items:center; gap:10px;">
+					<RadzenColumn><RadzenImage Path="icons/TotalMeetingsIcon.svg" Style="width:50px" /></RadzenColumn>
+					<RadzenColumn>
+						<RadzenRow>
+							<RadzenText TextStyle="TextStyle.Subtitle1">Toplam Görüşme</RadzenText>
+						</RadzenRow>
+						<RadzenRow>
+							<RadzenText TextStyle="TextStyle.H5">0</RadzenText>
+						</RadzenRow>
+					</RadzenColumn>
+				</RadzenCard>
+				@* User Cards/Planlanmış Görüşme *@
+				<RadzenCard Variant="Variant.Filled" Style="display:flex; align-items:center; gap:10px;">
+					<RadzenColumn><RadzenImage Path="icons/ScheduledMeetingsIcon.png" Style="width:50px" /></RadzenColumn>
+					<RadzenColumn>
+						<RadzenRow>
+							<RadzenText TextStyle="TextStyle.Subtitle2">Planlanmış Görüşme</RadzenText>
+						</RadzenRow>
+						<RadzenRow>
+							<RadzenText TextStyle="TextStyle.H5">0</RadzenText>
+						</RadzenRow>
+					</RadzenColumn>
+				</RadzenCard>
+				@* User Cards/Licence *@
+				<RadzenCard Variant="Variant.Filled" Style="display:flex; align-items:center; gap:10px;">
+					<RadzenColumn><RadzenImage Path="icons/LicencePriceIcon.png" Style="width:50px" /></RadzenColumn>
+					<RadzenColumn>
+						<RadzenRow>
+							<RadzenText TextStyle="TextStyle.Subtitle2">Paket Türü</RadzenText>
+						</RadzenRow>
+						<RadzenRow>
+							<RadzenText TextStyle="TextStyle.H5">Free</RadzenText>
+						</RadzenRow>
+					</RadzenColumn>
+				</RadzenCard>
+			</RadzenCardGroup>
+			</RadzenStack>
 
+			@* Dashboard Middle Section *@
+			<RadzenRow Gap="20px">
+				@* Message Column *@
+				<RadzenColumn Size="6">
+					<RadzenCard Style="display:flex;flex-direction:column;gap:10px">
+						<RadzenRow><RadzenIcon Icon="forum" /><RadzenText TextStyle="TextStyle.DisplayH5">Mesajlar</RadzenText></RadzenRow>
+						<RadzenRow Style="background:#F7F7F8; padding:0.5rem 1rem; border-radius:20px" class="rz-shadow-1">
+							<RadzenColumn Size="1" Style="display:flex; align-items:center; justify-content:center"><RadzenIcon Icon="mail" /></RadzenColumn>
+							<RadzenColumn Size="11">
+								<RadzenRow><RadzenText TextStyle="TextStyle.Body1"><strong>Fatih Demirbaş</strong></RadzenText></RadzenRow>
+								<RadzenRow><RadzenText TextStyle="TextStyle.Body2">Merhaba, ben Fatih. Nasılsınız?</RadzenText></RadzenRow>
+							</RadzenColumn>
+						</RadzenRow>
+						<RadzenRow Style="background:#F7F7F8; padding:0.5rem 1rem; border-radius:20px" class="rz-shadow-1">
+							<RadzenColumn Size="1" Style="display:flex; align-items:center; justify-content:center"><RadzenIcon Icon="mail" /></RadzenColumn>
+							<RadzenColumn Size="11">
+								<RadzenRow><RadzenText TextStyle="TextStyle.Body1"><strong>Güneş Adıgüzel</strong></RadzenText></RadzenRow>
+								<RadzenRow><RadzenText TextStyle="TextStyle.Body2">Merhaba, ben Güneş. Nasılsınız?</RadzenText></RadzenRow>
+							</RadzenColumn>
+						</RadzenRow>
+						<RadzenRow Style="background:#F7F7F8; padding:0.5rem 1rem; border-radius:20px" class="rz-shadow-1">
+							<RadzenColumn Size="1" Style="display:flex; align-items:center; justify-content:center"><RadzenIcon Icon="mail" /></RadzenColumn>
+							<RadzenColumn Size="11">
+								<RadzenRow><RadzenText TextStyle="TextStyle.Body1"><strong>Ece Dirhemsiz</strong></RadzenText></RadzenRow>
+								<RadzenRow><RadzenText TextStyle="TextStyle.Body2">Merhaba, ben Ece. Nasılsınız?</RadzenText></RadzenRow>
+							</RadzenColumn>
+						</RadzenRow>
+					</RadzenCard>
+				</RadzenColumn>
+				@* Event Column *@
+				<RadzenColumn Size="6">
+					<RadzenCard Style="display:flex;flex-direction:column;gap:10px">
+						<RadzenRow><RadzenIcon Icon="event" /><RadzenText TextStyle="TextStyle.DisplayH5">Görüşmeler</RadzenText></RadzenRow>
+						<RadzenRow Style="background:#F7F7F8; padding:0.5rem 1rem; border-radius:20px" class="rz-shadow-1">
+							<RadzenColumn Size="1" Style="display:flex; align-items:center; justify-content:center"><RadzenIcon Icon="calendar_month" /></RadzenColumn>
+							<RadzenColumn Size="11">
+								<RadzenRow><RadzenText TextStyle="TextStyle.Body1"><strong>Görüşme: Fatih Demirbaş</strong></RadzenText></RadzenRow>
+								<RadzenRow><RadzenText TextStyle="TextStyle.Body2">12 Aralık Pazar, 11.00-12.00</RadzenText></RadzenRow>
+							</RadzenColumn>
+						</RadzenRow>
+						<RadzenRow Style="background:#F7F7F8; padding:0.5rem 1rem; border-radius:20px" class="rz-shadow-1">
+							<RadzenColumn Size="1" Style="display:flex; align-items:center; justify-content:center"><RadzenIcon Icon="calendar_month" /></RadzenColumn>
+							<RadzenColumn Size="11">
+								<RadzenRow><RadzenText TextStyle="TextStyle.Body1"><strong>Görüşme: Güneş Adıgüzel</strong></RadzenText></RadzenRow>
+								<RadzenRow><RadzenText TextStyle="TextStyle.Body2">24 Aralık Cumartesi, 11.00-12.00</RadzenText></RadzenRow>
+							</RadzenColumn>
+						</RadzenRow>
+						<RadzenRow Style="background:#F7F7F8; padding:0.5rem 1rem; border-radius:20px" class="rz-shadow-1">
+							<RadzenColumn Size="1" Style="display:flex; align-items:center; justify-content:center"><RadzenIcon Icon="calendar_month" /></RadzenColumn>
+							<RadzenColumn Size="11">
+								<RadzenRow><RadzenText TextStyle="TextStyle.Body1"><strong>Görüşme: Ece Dirhemsiz</strong></RadzenText></RadzenRow>
+								<RadzenRow><RadzenText TextStyle="TextStyle.Body2">2 Ocak Pazar, 14.00-15.00</RadzenText></RadzenRow>
+							</RadzenColumn>
+						</RadzenRow>
+					</RadzenCard>
+				</RadzenColumn>
+			</RadzenRow>
+		</RadzenStack>
 	</RadzenBody>
 </RadzenLayout>
 

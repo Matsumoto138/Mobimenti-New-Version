@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Components\Pages\Dashboard\Mentor\" />
     <Folder Include="Providers\" />
   </ItemGroup>
 

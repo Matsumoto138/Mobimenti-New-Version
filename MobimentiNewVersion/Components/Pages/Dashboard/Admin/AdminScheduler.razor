@@ -1,0 +1,88 @@
+﻿@page "/admin-scheduler"
+
+@using MobimentiNewVersion.Business.Abstract
+@using MobimentiNewVersion.Components.Layout
+@using MobimentiNewVersion.Entity.Concrete
+
+@inject IMentorService _mentorService
+@inject IUserService _userService
+@inject IAppointmentService _appointmentService
+@inject NotificationService NotificationService
+
+<RadzenLayout Style="grid-template-areas: 'rz-sidebar rz-header' 'rz-sidebar rz-body'">
+	<AdminDashboardSidebarLayout/>
+	<RadzenBody>
+		<RadzenStack>
+			<RadzenStack><RadzenText TextStyle="TextStyle.DisplayH4">Hoşgeldin Yönetici</RadzenText></RadzenStack>
+			<RadzenStack>
+				
+				<RadzenCard Variant="Variant.Outlined" Style="display:flex; width:80%; margin:0 auto">
+					<RadzenRow Style="width:100%">
+						<RadzenColumn Style="display:flex; flex-direction:column" Size="3">
+							<RadzenLabel Text="Mentor Seçin" Component="MentorDropdown" />
+							<RadzenDropDownDataGrid @bind-Value=@(newAppointment.MentorId) Data=@availableMentors
+								TextProperty="@nameof(Mentor.LastName)" ValueProperty="@nameof(Mentor.Id)" AllowFilteringByAllStringColumns="true" Name="MentorDropdown">
+								<Columns>
+									<RadzenDropDownDataGridColumn Title="Id" Property="@nameof(Mentor.Id).ToString()" />
+									<RadzenDropDownDataGridColumn Title="İsim" Property="@nameof(Mentor.FirstName).ToString()" />
+									<RadzenDropDownDataGridColumn Title="Soyisim" Property="@nameof(Mentor.LastName).ToString()" />
+								</Columns>
+							</RadzenDropDownDataGrid>
+						</RadzenColumn>
+						<RadzenColumn Size="3" Style="display:flex; flex-direction:column">
+							<RadzenLabel Text="Kullanıcı Seçin" Component="UserDropdown" />
+							<RadzenDropDownDataGrid @bind-Value=@(newAppointment.UserId) Data=@users
+													TextProperty="@nameof(User.LastName)" ValueProperty="@nameof(User.Id)" AllowFilteringByAllStringColumns="true" Name="UserDropdown">
+								<Columns>
+									<RadzenDropDownDataGridColumn Title="Id" Property="@nameof(User.Id).ToString()" />
+									<RadzenDropDownDataGridColumn Title="İsim" Property="@nameof(User.FirstName).ToString()" />
+									<RadzenDropDownDataGridColumn Title="Soyisim" Property="@nameof(User.LastName).ToString()" />
+								</Columns>
+							</RadzenDropDownDataGrid>
+						</RadzenColumn>
+						<RadzenColumn Size="3" Style="display:flex; flex-direction:column">
+							<RadzenLabel Text="Tarihi Seçin" Component="DatePickerWithTime" />
+							<RadzenDatePicker @bind-Value=@(newAppointment.AppointmentDate) ShowTime="true" HoursStep="1" MinutesStep="15" DateFormat="MM/dd/yyyy HH:mm" Name="DatePickerWithTime" />
+						</RadzenColumn>
+						<RadzenColumn Size="3" Style="display:flex; flex-direction:column; justify-content:flex-end">
+							<RadzenButton Click="CreateAppointment" ButtonStyle="ButtonStyle.Success" Icon="add" Text="Oluştur" Style="box-shadow:none" />
+						</RadzenColumn>
+					</RadzenRow>
+				</RadzenCard>
+				
+			</RadzenStack>
+		</RadzenStack>
+	</RadzenBody>
+</RadzenLayout>
+
+@code {
+	List<Mentor> availableMentors;
+	List<User> users;
+	List<Appointment> appointments;
+
+	new Appointment newAppointment = new Appointment();
+
+	protected override async Task OnInitializedAsync()
+	{
+		await base.OnInitializedAsync();
+		availableMentors = _mentorService.GetAll(x => x.IsConfirmed == true);
+		users = _userService.GetAll();
+		appointments = _appointmentService.GetAll(x => x.Status == "Confirmed");
+
+	}
+
+	private void CreateAppointment()
+	{
+		newAppointment.Status = "Confirmed";
+		newAppointment.CreatedDate = DateTime.Now;
+
+		_appointmentService.Add(newAppointment);
+		NotificationService.Notify(new NotificationMessage
+			{
+				Severity = NotificationSeverity.Success,
+				Summary = "Randevu Oluşturuldu",
+				Duration = 4000
+			});
+	}
+
+}

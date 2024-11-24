@@ -1,6 +1,12 @@
 ﻿@page "/admin-dashboard"
 
+@using MobimentiNewVersion.Business.Abstract
 @using MobimentiNewVersion.Components.Layout
+@using MobimentiNewVersion.Entity.Concrete
+
+@inject IMentorService _mentorService
+@inject DialogService DialogService
+@inject NotificationService NotificationService
 
 <RadzenLayout Style="grid-template-areas: 'rz-sidebar rz-header' 'rz-sidebar rz-body'">
 	<AdminDashboardSidebarLayout />
@@ -148,10 +154,89 @@
 					</RadzenCard>
 				</RadzenColumn>
 			</RadzenRow>
+		
+			@* Dashboard Bottom Section *@
+			<RadzenStack class="rz-my-8">
+				<RadzenRow>
+					<RadzenDataGrid Data=@mentorApplications @ref="mentorApplicationTable" AllowFiltering=true AllowColumnResize="true" FilterMode="FilterMode.Advanced" AllowSorting="true"
+									PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Center" ShowPagingSummary="true" ColumnWidth="150px">
+						<HeaderTemplate>
+							<RadzenText TextStyle="TextStyle.DisplayH5">Mentor Başvuruları</RadzenText>
+						</HeaderTemplate>
+						<EmptyTemplate>
+							<p style="color: lightgrey; font-size: 24px; text-align: center; margin: 2rem;">No records to display.</p>
+						</EmptyTemplate>
+						<Columns>
+							<RadzenDataGridColumn Property="FirstName" Title="İsim" />
+							<RadzenDataGridColumn Property="LastName" Title="Soyisim" />
+							<RadzenDataGridColumn Property="Email" Title="Email" />
+							<RadzenDataGridColumn Property="PhoneNumber" Title="Telefon" />
+							<RadzenDataGridColumn Property="LinkedinAdress" Title="Linkedin" />
+							<RadzenDataGridColumn Property="CreatedDate" Title="Başvuru Tarihi" />
+							<RadzenDataGridColumn Title="İşlemler">
+								<Template Context="data">
+									<RadzenButton Icon="check_circle" ButtonStyle="ButtonStyle.Success" Click="@(async () => await ConfirmMentor(data))" />
+									<RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Click="@(() => DeleteMentorApplicationPopup(data))" />
+								</Template>
+							</RadzenDataGridColumn>
+						</Columns>
+					</RadzenDataGrid>
+				</RadzenRow>
+			</RadzenStack>
+
 		</RadzenStack>
 	</RadzenBody>
 </RadzenLayout>
 
 @code {
+	List<Mentor> mentorApplications;
+	RadzenDataGrid<Mentor> mentorApplicationTable;
 
+	protected override async Task OnInitializedAsync()
+	{
+		await base.OnInitializedAsync();
+
+		mentorApplications = _mentorService.GetAll(x => x.IsConfirmed == false);
+	}
+
+	async Task ConfirmMentor(Mentor data)
+	{
+		data.IsConfirmed = true;
+		_mentorService.Update(data);
+		await mentorApplicationTable.Reload();
+		NotificationService.Notify(new NotificationMessage
+				{
+					Severity = NotificationSeverity.Success,
+					Summary = "Mentor Onaylandı",
+					Duration = 4000
+				});
+	}
+
+	async Task DeleteMentorApplicationPopup(Mentor data)
+	{
+		var result = await DialogService.OpenAsync("Lütfen Onaylayın", ds =>
+		@<RadzenStack Gap="1.5rem">
+			<p>Mentor başvurusunu silmek istediğinize emin misiniz?</p>
+			<RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+				<RadzenStack Orientation="Orientation.Horizontal">
+				<RadzenButton Text="Onayla" Click="async () => {await DeleteMentorApplication(data); ds.Close(true);}" />
+					<RadzenButton Text="İptal" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Light" />
+				</RadzenStack>
+			</RadzenStack>
+		</RadzenStack>
+	);
+	}
+
+	async Task DeleteMentorApplication(Mentor data)
+	{
+		mentorApplications.Remove(data);
+		await mentorApplicationTable.Reload();
+		_mentorService.Delete(data);
+		NotificationService.Notify(new NotificationMessage
+				{
+					Severity = NotificationSeverity.Success,
+					Summary = "Mentor Silindi",
+					Duration = 4000
+				});
+	}
 }

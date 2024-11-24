@@ -19,8 +19,7 @@ namespace MobimentiNewVersion.DataAccess.Repositories
 
         public void Delete(T entity)
         {
-            var value = _context.Set<T>().Find(entity);
-            _context.Set<T>().Remove(value);
+            _context.Set<T>().Remove(entity);
             _context.SaveChanges();
         }
 
@@ -31,8 +30,12 @@ namespace MobimentiNewVersion.DataAccess.Repositories
 
         public List<T> GetAll(Expression<Func<T, bool>> filter = null)
         {
-            return _context.Set<T>().ToList();
-        }
+			if (filter == null)
+			{
+				return _context.Set<T>().ToList();
+			}
+			return _context.Set<T>().Where(filter).ToList();
+		}
 
         public T GetById(int id)
         {

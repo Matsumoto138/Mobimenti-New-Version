@@ -9,6 +9,7 @@ namespace MobimentiNewVersion.Entity.Concrete
 {
     public class Mentor : BaseUser
     {
+
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;

@@ -15,7 +15,6 @@
 		<RadzenStack>
 			<RadzenStack><RadzenText TextStyle="TextStyle.DisplayH4">Hoşgeldin Yönetici</RadzenText></RadzenStack>
 			<RadzenStack>
-				
 				<RadzenCard Variant="Variant.Outlined" Style="display:flex; width:80%; margin:0 auto">
 					<RadzenRow Style="width:100%">
 						<RadzenColumn Style="display:flex; flex-direction:column" Size="3">
@@ -51,6 +50,13 @@
 				</RadzenCard>
 				
 			</RadzenStack>
+			<RadzenStack>
+				<RadzenScheduler @ref=@scheduler Data=@scheduleAppointments StartProperty="Start" EndProperty="End" TextProperty="Text" SelectedIndex="2">
+					<RadzenDayView />
+					<RadzenWeekView />
+					<RadzenMonthView />
+				</RadzenScheduler>
+			</RadzenStack>
 		</RadzenStack>
 	</RadzenBody>
 </RadzenLayout>
@@ -59,16 +65,38 @@
 	List<Mentor> availableMentors;
 	List<User> users;
 	List<Appointment> appointments;
+	IList<AppointmentModelForScheduler> scheduleAppointments = new List<AppointmentModelForScheduler>();
+	RadzenScheduler<AppointmentModelForScheduler> scheduler;
 
-	new Appointment newAppointment = new Appointment();
+	public class AppointmentModelForScheduler
+	{
+		public DateTime Start { get; set; }
+		public DateTime End { get; set; }
+
+		public string Text { get; set; }
+	}
+
+	Appointment newAppointment = new Appointment();
 
 	protected override async Task OnInitializedAsync()
 	{
 		await base.OnInitializedAsync();
 		availableMentors = _mentorService.GetAll(x => x.IsConfirmed == true);
 		users = _userService.GetAll();
-		appointments = _appointmentService.GetAll(x => x.Status == "Confirmed");
+		appointments = _appointmentService.GetAll();
 
+		if (appointments != null)
+		{
+			foreach (var appointment in appointments)
+			{
+				AppointmentModelForScheduler scheduleAppointment = new AppointmentModelForScheduler();
+				scheduleAppointment.Start = appointment.AppointmentDate;
+				scheduleAppointment.End = appointment.AppointmentDate.AddHours(1);
+				scheduleAppointment.Text = appointment.Mentor.FirstName + " " + appointment.Mentor.LastName + "-" + appointment.User.FirstName + " " + appointment.User.LastName;
+
+				scheduleAppointments.Add(scheduleAppointment);
+			}
+		}
 	}
 
 	private void CreateAppointment()
@@ -77,6 +105,7 @@
 		newAppointment.CreatedDate = DateTime.Now;
 
 		_appointmentService.Add(newAppointment);
+		scheduler.Reload();
 		NotificationService.Notify(new NotificationMessage
 			{
 				Severity = NotificationSeverity.Success,

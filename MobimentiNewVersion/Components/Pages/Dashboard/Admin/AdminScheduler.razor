@@ -8,14 +8,17 @@
 @inject IUserService _userService
 @inject IAppointmentService _appointmentService
 @inject NotificationService NotificationService
+@inject TooltipService TooltipService
 
 <RadzenLayout Style="grid-template-areas: 'rz-sidebar rz-header' 'rz-sidebar rz-body'">
 	<AdminDashboardSidebarLayout/>
 	<RadzenBody>
 		<RadzenStack>
 			<RadzenStack><RadzenText TextStyle="TextStyle.DisplayH4">Hoşgeldin Yönetici</RadzenText></RadzenStack>
+			@* Randevu Oluştur *@
 			<RadzenStack>
-				<RadzenCard Variant="Variant.Outlined" Style="display:flex; width:80%; margin:0 auto">
+				<RadzenCard Style="display:flex; flex-direction:column; width:80%; margin:0 auto">
+					<RadzenText TextStyle="TextStyle.DisplayH5" >Randevu Oluştur</RadzenText>
 					<RadzenRow Style="width:100%">
 						<RadzenColumn Style="display:flex; flex-direction:column" Size="3">
 							<RadzenLabel Text="Mentor Seçin" Component="MentorDropdown" />
@@ -50,12 +53,50 @@
 				</RadzenCard>
 				
 			</RadzenStack>
-			<RadzenStack>
-				<RadzenScheduler @ref=@scheduler Data=@scheduleAppointments StartProperty="Start" EndProperty="End" TextProperty="Text" SelectedIndex="2">
+			
+			@* Takvim *@
+			<RadzenStack class="rz-my-4">
+				<RadzenCard class="rz-p-4">
+					<RadzenText TextStyle="TextStyle.DisplayH5">Takvim</RadzenText>
+				<RadzenScheduler @ref=@scheduler Data=@scheduleAppointments TItem="AppointmentModelForScheduler" StartProperty="Start" EndProperty="End"
+					TextProperty="Text" SelectedIndex="2"
+					AppointmentMouseEnter=@OnAppointmentMouseEnter AppointmentMouseLeave=@OnAppointmentMouseLeave>
 					<RadzenDayView />
 					<RadzenWeekView />
 					<RadzenMonthView />
 				</RadzenScheduler>
+				</RadzenCard>
+			</RadzenStack>
+
+			<RadzenStack class="rz-my-4">
+				<RadzenDataGrid Data=@appointments @ref=@appointmentDataGrid AllowFiltering=true AllowColumnResize="true" FilterMode="FilterMode.Advanced" AllowSorting="true"
+								PageSize="10" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Center" 
+								ShowPagingSummary="true" ColumnWidth="150px">
+
+					<HeaderTemplate>
+						<RadzenText TextStyle="TextStyle.DisplayH5" >Tüm Görüşmeler</RadzenText>
+					</HeaderTemplate>
+					<Columns>
+					<RadzenDataGridColumn Title="Id" Property="Id" Width="60px" />
+					<RadzenDataGridColumn Title="Görüşme Tarihi" Property="AppointmentDate" />
+					<RadzenDataGridColumn Title="Mentor">
+						<Template Context="data">
+							@(data.Mentor.FirstName)  @(data.Mentor.LastName)
+						</Template>
+					</RadzenDataGridColumn>
+					<RadzenDataGridColumn Title="Kullanıcı">
+						<Template Context="data">
+							@(data.User.FirstName)  @(data.User.LastName)
+						</Template>
+					</RadzenDataGridColumn>
+					<RadzenDataGridColumn Title="Oluşturulma Tarihi" Property="CreatedDate" />
+					<RadzenDataGridColumn Title="İşlemler">
+						<Template Context="data">
+								<RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Click="(() => DeleteAppointment(data))" />
+						</Template>
+					</RadzenDataGridColumn>
+					</Columns>
+				</RadzenDataGrid>
 			</RadzenStack>
 		</RadzenStack>
 	</RadzenBody>
@@ -67,6 +108,7 @@
 	List<Appointment> appointments;
 	IList<AppointmentModelForScheduler> scheduleAppointments = new List<AppointmentModelForScheduler>();
 	RadzenScheduler<AppointmentModelForScheduler> scheduler;
+	RadzenDataGrid<Appointment> appointmentDataGrid;
 
 	public class AppointmentModelForScheduler
 	{
@@ -106,10 +148,55 @@
 
 		_appointmentService.Add(newAppointment);
 		scheduler.Reload();
+		OnInitializedAsync();
 		NotificationService.Notify(new NotificationMessage
 			{
 				Severity = NotificationSeverity.Success,
 				Summary = "Randevu Oluşturuldu",
+				Duration = 4000
+			});
+	}
+
+	void OnAppointmentMouseEnter(SchedulerAppointmentMouseEventArgs<AppointmentModelForScheduler> args)
+	{
+		TooltipService.Open(args.Element, ts =>
+	@<RadzenStack Orientation="Orientation.Vertical" Gap="0" class="rz-p-6" Style="min-width: 250px; max-width: 500px;">
+		<RadzenText TextStyle="TextStyle.H4" class="rz-mb-4" Style="color: var(--rz-tooltip-color);">
+			@args.Data.Text
+		</RadzenText>
+		<RadzenStack Orientation="Orientation.Horizontal" Gap="4px">
+			<RadzenText TextStyle="TextStyle.Body2" Style="color: var(--rz-tooltip-color); width: 44px;">
+				<strong>Start</strong>
+			</RadzenText>
+			<RadzenText TextStyle="TextStyle.Body2" Style="color: var(--rz-tooltip-color);">
+				@args.Data.Start.ToString("hh:mm ⋅ dddd, MMMM d")
+			</RadzenText>
+		</RadzenStack>
+		<RadzenStack Orientation="Orientation.Horizontal" Gap="4px">
+			<RadzenText TextStyle="TextStyle.Body2" Style="color: var(--rz-tooltip-color); width: 44px;">
+				<strong>End</strong>
+			</RadzenText>
+			<RadzenText TextStyle="TextStyle.Body2" Style="color: var(--rz-tooltip-color);">
+				@args.Data.End.ToString("hh:mm ⋅ dddd, MMMM d")
+			</RadzenText>
+		</RadzenStack>
+	</RadzenStack>
+	, new TooltipOptions { Position = TooltipPosition.Right, Duration = null });
+	}
+
+	void OnAppointmentMouseLeave(SchedulerAppointmentMouseEventArgs<AppointmentModelForScheduler> args)
+	{
+		TooltipService.Close();
+	}
+
+	private void DeleteAppointment(Appointment appointment)
+	{
+		_appointmentService.Delete(appointment);
+		appointmentDataGrid.Reload();
+		NotificationService.Notify(new NotificationMessage
+			{
+				Severity = NotificationSeverity.Success,
+				Summary = "Randevu Silindi",
 				Duration = 4000
 			});
 	}

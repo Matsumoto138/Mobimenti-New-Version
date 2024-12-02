@@ -3,8 +3,13 @@
 @using MobimentiNewVersion.Business.Abstract
 @using MobimentiNewVersion.Components.Layout
 @using MobimentiNewVersion.Entity.Concrete
+@using System.Globalization
 
 @inject IMentorService _mentorService
+@inject ISaleService _saleService
+@inject IPackageService _packageService
+@inject IUserService _userService
+@inject IAppointmentService _appointmentService
 @inject DialogService DialogService
 @inject NotificationService NotificationService
 
@@ -81,46 +86,79 @@
 
 			@* Dashboard Middle Section *@
 			<RadzenRow Gap="20px">
-				@* Message Column *@
-				<RadzenColumn Size="6">
-					<RadzenCard Style="display:flex;flex-direction:column;gap:10px">
-						<RadzenRow Style="margin-bottom:0.5rem">
+				@* Sales Column *@
+				<RadzenColumn Size="12" SizeMD="6">
+					<RadzenCard Style="display:flex;flex-direction:column;gap:10px; min-height:300px">
+						<RadzenRow AlignItems="AlignItems.Center" Style="margin-bottom:1rem">
 							<RadzenColumn>
-								<RadzenRow>
-									<RadzenIcon Icon="payments" /><RadzenText TextStyle="TextStyle.DisplayH5">Son Satışlar</RadzenText>
+								<RadzenRow AlignItems="AlignItems.Center">
+									<RadzenIcon Icon="payments" /><RadzenText Style="margin-bottom:0!important" TextStyle="TextStyle.DisplayH5">Son Satışlar</RadzenText>
 								</RadzenRow>
 							</RadzenColumn>
 							<RadzenColumn Style="display:flex; justify-content:flex-end">
-								<RadzenButton Text="Detayları Görüntüle" ButtonStyle="ButtonStyle.Info" Variant="Variant.Text" Size="ButtonSize.ExtraSmall" />
+								<RadzenButton Text="Tüm Satışları Gör" ButtonStyle="ButtonStyle.Info" Variant="Variant.Text" Size="ButtonSize.ExtraSmall" />
 							</RadzenColumn>
 						</RadzenRow>
-						<RadzenRow Style="background:#F7F7F8; padding:0.5rem 1rem; border-radius:20px" class="rz-shadow-1">
-							<RadzenColumn Size="1" Style="display:flex; align-items:center; justify-content:center"><RadzenIcon Icon="mail" /></RadzenColumn>
-							<RadzenColumn Size="11">
-								<RadzenRow><RadzenText TextStyle="TextStyle.Body1"><strong>Fatih Demirbaş</strong></RadzenText></RadzenRow>
-								<RadzenRow><RadzenText TextStyle="TextStyle.Body2">Merhaba, ben Fatih. Nasılsınız?</RadzenText></RadzenRow>
-							</RadzenColumn>
-						</RadzenRow>
-						<RadzenRow Style="background:#F7F7F8; padding:0.5rem 1rem; border-radius:20px" class="rz-shadow-1">
-							<RadzenColumn Size="1" Style="display:flex; align-items:center; justify-content:center"><RadzenIcon Icon="mail" /></RadzenColumn>
-							<RadzenColumn Size="11">
-								<RadzenRow><RadzenText TextStyle="TextStyle.Body1"><strong>Güneş Adıgüzel</strong></RadzenText></RadzenRow>
-								<RadzenRow><RadzenText TextStyle="TextStyle.Body2">Merhaba, ben Güneş. Nasılsınız?</RadzenText></RadzenRow>
-							</RadzenColumn>
-						</RadzenRow>
-						<RadzenRow Style="background:#F7F7F8; padding:0.5rem 1rem; border-radius:20px" class="rz-shadow-1">
-							<RadzenColumn Size="1" Style="display:flex; align-items:center; justify-content:center"><RadzenIcon Icon="mail" /></RadzenColumn>
-							<RadzenColumn Size="11">
-								<RadzenRow><RadzenText TextStyle="TextStyle.Body1"><strong>Ece Dirhemsiz</strong></RadzenText></RadzenRow>
-								<RadzenRow><RadzenText TextStyle="TextStyle.Body2">Merhaba, ben Ece. Nasılsınız?</RadzenText></RadzenRow>
-							</RadzenColumn>
-						</RadzenRow>
+					<RadzenDataList Style="overflow:auto;"
+									WrapItems="true" AllowPaging="true"
+									Data="@saleTemplates" TItem="ShowSaleTemplate" PageSize="5" 
+									PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
+						<Template Context="sale">
+							<RadzenCard Variant="Variant.Outlined" class="rz-p-0" Style="width: 100%; overflow: hidden;">
+								<RadzenRow Gap="0">
+									<RadzenColumn Size="12" SizeLG="3" class="rz-p-4 product-title">
+										<RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" class="rz-color-on-secondary-lighter">@(sale.PackageName)</RadzenText>
+									</RadzenColumn>
+										<RadzenColumn Size="12" SizeLG="7" class="rz-p-4" Style="display:flex; align-items:center; justify-content:space-around; width:100%">
+										<RadzenRow Gap="20">
+											<RadzenColumn Size="12" SizeSM="5" Style="display:flex; align-items:center">
+												<RadzenText TextStyle="TextStyle.Body2" TagName="TagName.H5" class="rz-mb-0">@(sale.UserName)</RadzenText>
+											</RadzenColumn>
+											<RadzenColumn Size="12" SizeSM="5">
+												<RadzenText TextStyle="TextStyle.Body1" TagName="TagName.H5" class="rz-mb-0">@(sale.SaleDate)</RadzenText>
+											</RadzenColumn>
+											<RadzenColumn Size="12" SizeSM="2" class="rz-text-align-start rz-text-align-lg-end">
+												<RadzenBadge BadgeStyle="BadgeStyle.Secondary" Shade="Shade.Lighter" class="price-badge" Text=@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", sale.Price)}") />
+											</RadzenColumn>
+										</RadzenRow>
+									</RadzenColumn>
+								</RadzenRow>
+							</RadzenCard>
+						</Template>
+					</RadzenDataList>
 					</RadzenCard>
 				</RadzenColumn>
 				@* Event Column *@
-				<RadzenColumn Size="6">
-					<RadzenCard Style="display:flex;flex-direction:column;gap:10px">
+				<RadzenColumn Size="12" SizeMD="6">
+					<RadzenCard Style="display:flex;flex-direction:column;gap:10px;min-height:300px">
 						<RadzenRow AlignItems="AlignItems.Center" Style="margin-bottom:1rem">
+							<RadzenColumn>
+								<RadzenRow AlignItems="AlignItems.Center">
+									<RadzenIcon Icon="event" /><RadzenText Style="margin-bottom:0!important" TextStyle="TextStyle.DisplayH5">Görüşmeler</RadzenText>
+								</RadzenRow>
+							</RadzenColumn>
+							<RadzenColumn Style="display:flex; justify-content:flex-end">
+								<RadzenButton Text="Randevu Oluştur" ButtonStyle="ButtonStyle.Info" Variant="Variant.Text" Size="ButtonSize.ExtraSmall" />
+							</RadzenColumn>
+						</RadzenRow>
+						<RadzenDataList Style="overflow:auto;"
+										WrapItems="true" AllowPaging="true"
+										Data="@appoitmentTemplates" TItem="ShowAppoitmentTemplate" PageSize="5"
+										PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
+							<Template Context="appointment">
+								<RadzenCard Variant="Variant.Outlined" class="rz-p-4" Style="width: 100%; overflow: hidden;">
+									<RadzenRow>
+										<RadzenColumn Size="1" Style="display:flex; align-items:center; justify-content:center"><RadzenIcon Icon="calendar_month" /></RadzenColumn>
+										<RadzenColumn Size="11">
+											<RadzenRow><RadzenText TextStyle="TextStyle.Body1"><strong>Görüşme: @appointment.MentorName - @appointment.UserName</strong></RadzenText></RadzenRow>
+											<RadzenRow><RadzenText TextStyle="TextStyle.Body2">@appointment.StartDate, @appointment.StartHour-@appointment.EndHour</RadzenText></RadzenRow>
+										</RadzenColumn>
+									</RadzenRow>
+								</RadzenCard>
+							</Template>
+
+						</RadzenDataList>
+						@* <RadzenRow AlignItems="AlignItems.Center" Style="margin-bottom:1rem">
 							<RadzenColumn>
 								<RadzenRow AlignItems="AlignItems.Center">
 									<RadzenIcon Icon="event" /><RadzenText Style="margin-bottom:0!important" TextStyle="TextStyle.DisplayH5">Görüşmeler</RadzenText>
@@ -150,7 +188,7 @@
 								<RadzenRow><RadzenText TextStyle="TextStyle.Body1"><strong>Görüşme: Ece Dirhemsiz</strong></RadzenText></RadzenRow>
 								<RadzenRow><RadzenText TextStyle="TextStyle.Body2">2 Ocak Pazar, 14.00-15.00</RadzenText></RadzenRow>
 							</RadzenColumn>
-						</RadzenRow>
+						</RadzenRow> *@
 					</RadzenCard>
 				</RadzenColumn>
 			</RadzenRow>
@@ -192,11 +230,87 @@
 	List<Mentor> mentorApplications;
 	RadzenDataGrid<Mentor> mentorApplicationTable;
 
+	IEnumerable<Sale> sales = new List<Sale>();
+	List<ShowSaleTemplate> saleTemplates = new List<ShowSaleTemplate>();
+	List<Appointment> appointments = new List<Appointment>();
+	List<ShowAppoitmentTemplate> appoitmentTemplates = new List<ShowAppoitmentTemplate>();
+
+	private class ShowSaleTemplate()
+	{
+		public string PackageName { get; set; }
+		public string UserName { get; set; }
+		public string SaleDate { get; set; }
+		public string Price { get; set; }
+
+	}
+
+	private class ShowAppoitmentTemplate()
+	{
+		public string MentorName { get; set; }
+		public string UserName { get; set; }
+		public string StartDate { get; set; }
+		public string StartHour { get; set; }
+		public string EndHour { get; set; }
+	}
+
 	protected override async Task OnInitializedAsync()
 	{
 		await base.OnInitializedAsync();
 
 		mentorApplications = _mentorService.GetAll(x => x.IsConfirmed == false);
+		sales = _saleService.GetAll();
+		appointments = _appointmentService.GetAll();
+
+		if (sales.Any())
+		{
+			foreach (var sale in sales)
+			{
+				Package package = _packageService.GetById(sale.PackageId);
+				User user = _userService.GetById(sale.UserId);
+
+				var packageName = package.PackageName;
+				var price = package.Price;
+				var userName = user.FirstName + user.LastName;
+				var saleDate = sale.SaleDate.Date.ToString("dd MMM yyyy", CultureInfo.InvariantCulture);
+
+				ShowSaleTemplate showSaleTemplate = new ShowSaleTemplate
+					{
+						PackageName = packageName,
+						UserName = userName,
+						SaleDate = saleDate,
+						Price = price.ToString()
+					};
+
+				saleTemplates.Add(showSaleTemplate);
+
+			}
+		}
+		if (appointments.Any())
+		{
+			foreach (var appointment in appointments)
+			{
+				var mentor = _mentorService.GetById(appointment.MentorId);
+				var user = _userService.GetById(appointment.UserId);
+				var startDate = appointment.AppointmentDate.Date.ToString("dd MMM yyyy, dddd", CultureInfo.InvariantCulture);
+				var startHour = appointment.AppointmentDate.Hour.ToString() + "."+ appointment.AppointmentDate.Minute.ToString();
+				var endHour = appointment.AppointmentDate.AddHours(1).Hour.ToString() + "." + appointment.AppointmentDate.Minute.ToString();
+
+				var mentorName = mentor.FirstName +" "+ mentor.LastName;
+				var userName = user.FirstName +" "+ mentor.LastName;
+
+
+				ShowAppoitmentTemplate showAppoitmentTemplate = new ShowAppoitmentTemplate
+					{
+						MentorName = mentorName,
+						UserName = userName,
+						StartDate = startDate,
+						StartHour = startHour,
+						EndHour = endHour
+					};
+
+					appoitmentTemplates.Add(showAppoitmentTemplate);
+			}
+		}
 	}
 
 	async Task ConfirmMentor(Mentor data)

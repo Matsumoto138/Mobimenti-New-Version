@@ -11,7 +11,7 @@ namespace MobimentiNewVersion.Entity.Concrete
         public string PackageName { get; set; }
         public double Price { get; set; }
         public int SessionCount { get; set; }
-        public List<string> Advantages { get; set; } = new List<string>();
+        public string Advantages { get; set; }
         public List<Sale> Sales { get; set; }
 
     }

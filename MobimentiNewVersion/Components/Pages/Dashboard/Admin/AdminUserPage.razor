@@ -5,26 +5,29 @@
 @using MobimentiNewVersion.Entity.Concrete
 
 @inject IUserService _userService
+@inject DialogService DialogService
+@inject NotificationService NotificationService
+
 
 <RadzenLayout Style="grid-template-areas: 'rz-sidebar rz-header' 'rz-sidebar rz-body'">
 	<AdminDashboardSidebarLayout />
 	<RadzenBody>
-		<RadzenDataGrid Data="@users" TItem="User" AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" 
-		AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Center" ShowPagingSummary="true"
+		<RadzenDataGrid @ref=@userGrid Data="@users" TItem="User" AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" 
+		AllowSorting="true" PageSize="20" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Center" ShowPagingSummary="true"
 			ColumnWidth="200px" LogicalFilterOperator="LogicalFilterOperator.Or">
 			<HeaderTemplate>
-				<RadzenText TextStyle="TextStyle.DisplayH3">Kullanıcılar</RadzenText>
+				<RadzenText TextStyle="TextStyle.DisplayH4">Kullanıcılar</RadzenText>
 			</HeaderTemplate>
 			<Columns>
-				<RadzenDataGridColumn Property="@nameof(User.Id)" Title="ID" />
+				<RadzenDataGridColumn Property="@nameof(User.Id)" Title="ID" Width="100px" />
 				<RadzenDataGridColumn Property="@nameof(User.FirstName)" Title="İsim" />
 				<RadzenDataGridColumn Property="@nameof(User.LastName)" Title="Soyisim" />
 				<RadzenDataGridColumn Property="@nameof(User.Email)" Title="Email" />
 				<RadzenDataGridColumn Property="@nameof(User.Licence)" Title="Lisans" />
 				<RadzenDataGridColumn Property="@nameof(User.CreatedDate)" Title="Oluşturulma Tarihi" />
-				<RadzenDataGridColumn Title="İşlemler">
+				<RadzenDataGridColumn Title="İşlemler" Filterable="false">
 					<Template Context="data">
-						<RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" />
+						<RadzenButton Click="@(() => DeleteConfirm(data))" Icon="delete" ButtonStyle="ButtonStyle.Danger" Variant="Variant.Text" />
 					</Template>
 				</RadzenDataGridColumn>
 			</Columns>
@@ -34,10 +37,48 @@
 
 @code {
 	List<User> users = new List<User>();
+	RadzenDataGrid<User> userGrid;
 
 	protected override async Task OnInitializedAsync()
 	{
 		await base.OnInitializedAsync();
 		users = _userService.GetAll();
+	}
+
+	async Task DeleteConfirm(User deletedUser)
+	{
+		var result = await DialogService.OpenAsync("Lütfen Onaylayın", ds =>
+	@<RadzenStack Gap="1.5rem">
+		<p>Kullanıcıyı gerçekten silmek istiyor musunuz?</p>
+		<RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+			<RadzenStack Orientation="Orientation.Horizontal">
+				<RadzenButton Text="Onayla" Click="(() => {DeleteUser(deletedUser);ds.Close(true);})" />
+				<RadzenButton Text="İptal" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Light" />
+			</RadzenStack>
+		</RadzenStack>
+	</RadzenStack>
+	);
+	}
+
+	private void DeleteUser(User user)
+	{
+		try
+		{
+			_userService.Delete(user);
+			NotificationService.Notify(new NotificationMessage
+				{
+					Severity = NotificationSeverity.Success,
+					Summary = "İşlem Başarılı",
+					Detail = "Kullanıcı Silindi",
+					Duration = 4000
+				});
+
+			userGrid.Reload();
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine(e.Message);
+			throw;
+		}
 	}
 }

@@ -1,5 +1,84 @@
-﻿<h3>AdminMentorPage</h3>
+﻿@page "/admin-mentors"
+@using MobimentiNewVersion.Business.Abstract
+@using MobimentiNewVersion.Components.Layout
+@using MobimentiNewVersion.Entity.Concrete
+
+@inject IMentorService _mentorService
+@inject DialogService DialogService
+@inject NotificationService NotificationService
+
+<RadzenLayout Style="grid-template-areas: 'rz-sidebar rz-header' 'rz-sidebar rz-body'">
+	<AdminDashboardSidebarLayout />
+	<RadzenBody>
+		<RadzenDataGrid @ref=@mentorGrid Data="@mentors" TItem="Mentor" AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced"
+						AllowSorting="true" PageSize="20" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Center" ShowPagingSummary="true"
+						ColumnWidth="200px" LogicalFilterOperator="LogicalFilterOperator.Or">
+			<HeaderTemplate>
+				<RadzenText TextStyle="TextStyle.DisplayH4">Mentorlar</RadzenText>
+			</HeaderTemplate>
+			<Columns>
+				<RadzenDataGridColumn Property="@nameof(Mentor.Id)" Title="ID" Width="100px" />
+				<RadzenDataGridColumn Property="@nameof(Mentor.FirstName)" Title="İsim" />
+				<RadzenDataGridColumn Property="@nameof(Mentor.LastName)" Title="Soyisim" />
+				<RadzenDataGridColumn Property="@nameof(Mentor.Email)" Title="Email" />
+				<RadzenDataGridColumn Property="@nameof(Mentor.LinkedinAdress)" Title="LinkedIn" />
+				<RadzenDataGridColumn Property="@nameof(Mentor.CreatedDate)" Title="Oluşturulma Tarihi" />
+				<RadzenDataGridColumn Title="İşlemler" Filterable="false">
+					<Template Context="data">
+						<RadzenButton Icon="visibility" ButtonStyle="ButtonStyle.Info" Variant="Variant.Text" />
+						<RadzenButton Click="@(() => DeleteConfirm(data))" Icon="delete" ButtonStyle="ButtonStyle.Danger" Variant="Variant.Text" />
+					</Template>
+				</RadzenDataGridColumn>
+			</Columns>
+		</RadzenDataGrid>
+	</RadzenBody>
+</RadzenLayout>
 
 @code {
+	List<Mentor> mentors = new List<Mentor>();
+	RadzenDataGrid<Mentor> mentorGrid;
 
+
+	protected override async Task OnInitializedAsync()
+	{
+		await base.OnInitializedAsync();
+		mentors = _mentorService.GetAll();
+	}
+
+	async Task DeleteConfirm(Mentor deletedUser)
+	{
+		var result = await DialogService.OpenAsync("Lütfen Onaylayın", ds =>
+	@<RadzenStack Gap="1.5rem">
+		<p>Kullanıcıyı gerçekten silmek istiyor musunuz?</p>
+		<RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+			<RadzenStack Orientation="Orientation.Horizontal">
+				<RadzenButton Text="Onayla" Click="(() => {DeleteMentor(deletedUser);ds.Close(true);})" />
+				<RadzenButton Text="İptal" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Light" />
+			</RadzenStack>
+		</RadzenStack>
+	</RadzenStack>
+	);
+	}
+
+	private void DeleteMentor(Mentor mentor)
+	{
+		try
+		{
+			_mentorService.Delete(mentor);
+			NotificationService.Notify(new NotificationMessage
+				{
+					Severity = NotificationSeverity.Success,
+					Summary = "İşlem Başarılı",
+					Detail = "Kullanıcı Silindi",
+					Duration = 4000
+				});
+
+			mentorGrid.Reload();
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine(e.Message);
+			throw;
+		}
+	}
 }

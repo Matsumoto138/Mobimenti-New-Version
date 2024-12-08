@@ -9,12 +9,12 @@
 		<RadzenImage Style="@(GetLogoStyle())" Path="@(sidebarExpanded ? "image/Logo.png" : "icons/LogoWithNoText.svg")" />
 	</RadzenStack>
 	<RadzenPanelMenu DisplayStyle="@(sidebarExpanded ? MenuItemDisplayStyle.IconAndText : MenuItemDisplayStyle.Icon)" ShowArrow="false" AlignItems="AlignItems.Center">
-		<RadzenPanelMenuItem Text="Genel" Icon="home" />
-		<RadzenPanelMenuItem Text="Görüşmeler" Icon="calendar_month" />
+		<RadzenPanelMenuItem Path="/admin-dashboard" Text="Genel" Icon="home" />
+		<RadzenPanelMenuItem Path="/admin-scheduler" Text="Görüşmeler" Icon="calendar_month" />
 		<RadzenPanelMenuItem Text="Satışlar" Icon="payments" />
 		<RadzenPanelMenuItem Text="Paketler" Icon="list_alt" />
-		<RadzenPanelMenuItem Text="Kullanıcılar" Icon="group" />
-		<RadzenPanelMenuItem Text="Mentorlar" Icon="partner_exchange" />
+		<RadzenPanelMenuItem Path="/admin-users" Text="Kullanıcılar" Icon="group" />
+		<RadzenPanelMenuItem Path="/admin-mentors" Text="Mentorlar" Icon="partner_exchange" />
 		<RadzenPanelMenuItem Text="Ayarlar" Icon="settings" />
 	</RadzenPanelMenu>
 </RadzenSidebar>

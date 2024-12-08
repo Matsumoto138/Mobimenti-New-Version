@@ -12,6 +12,7 @@
 @inject IAppointmentService _appointmentService
 @inject DialogService DialogService
 @inject NotificationService NotificationService
+@inject NavigationManager Navigation
 
 <RadzenLayout Style="grid-template-areas: 'rz-sidebar rz-header' 'rz-sidebar rz-body'">
 	<AdminDashboardSidebarLayout />
@@ -138,7 +139,7 @@
 								</RadzenRow>
 							</RadzenColumn>
 							<RadzenColumn Style="display:flex; justify-content:flex-end">
-								<RadzenButton Text="Randevu Oluştur" ButtonStyle="ButtonStyle.Info" Variant="Variant.Text" Size="ButtonSize.ExtraSmall" />
+								<RadzenButton Click="NavigateScheduler" Text="Randevu Oluştur" ButtonStyle="ButtonStyle.Info" Variant="Variant.Text" Size="ButtonSize.ExtraSmall" />
 							</RadzenColumn>
 						</RadzenRow>
 						<RadzenDataList Style="overflow:auto;"
@@ -158,37 +159,6 @@
 							</Template>
 
 						</RadzenDataList>
-						@* <RadzenRow AlignItems="AlignItems.Center" Style="margin-bottom:1rem">
-							<RadzenColumn>
-								<RadzenRow AlignItems="AlignItems.Center">
-									<RadzenIcon Icon="event" /><RadzenText Style="margin-bottom:0!important" TextStyle="TextStyle.DisplayH5">Görüşmeler</RadzenText>
-								</RadzenRow>
-							</RadzenColumn>
-							<RadzenColumn Style="display:flex; justify-content:flex-end">
-								<RadzenButton Text="Randevu Oluştur" ButtonStyle="ButtonStyle.Info" Variant="Variant.Text" Size="ButtonSize.ExtraSmall" />
-							</RadzenColumn>
-						</RadzenRow>
-						<RadzenRow Style="background:#F7F7F8; padding:0.5rem 1rem; border-radius:20px" class="rz-shadow-1">
-							<RadzenColumn Size="1" Style="display:flex; align-items:center; justify-content:center"><RadzenIcon Icon="calendar_month" /></RadzenColumn>
-							<RadzenColumn Size="11">
-								<RadzenRow><RadzenText TextStyle="TextStyle.Body1"><strong>Görüşme: Fatih Demirbaş</strong></RadzenText></RadzenRow>
-								<RadzenRow><RadzenText TextStyle="TextStyle.Body2">12 Aralık Pazar, 11.00-12.00</RadzenText></RadzenRow>
-							</RadzenColumn>
-						</RadzenRow>
-						<RadzenRow Style="background:#F7F7F8; padding:0.5rem 1rem; border-radius:20px" class="rz-shadow-1">
-							<RadzenColumn Size="1" Style="display:flex; align-items:center; justify-content:center"><RadzenIcon Icon="calendar_month" /></RadzenColumn>
-							<RadzenColumn Size="11">
-								<RadzenRow><RadzenText TextStyle="TextStyle.Body1"><strong>Görüşme: Güneş Adıgüzel</strong></RadzenText></RadzenRow>
-								<RadzenRow><RadzenText TextStyle="TextStyle.Body2">24 Aralık Cumartesi, 11.00-12.00</RadzenText></RadzenRow>
-							</RadzenColumn>
-						</RadzenRow>
-						<RadzenRow Style="background:#F7F7F8; padding:0.5rem 1rem; border-radius:20px" class="rz-shadow-1">
-							<RadzenColumn Size="1" Style="display:flex; align-items:center; justify-content:center"><RadzenIcon Icon="calendar_month" /></RadzenColumn>
-							<RadzenColumn Size="11">
-								<RadzenRow><RadzenText TextStyle="TextStyle.Body1"><strong>Görüşme: Ece Dirhemsiz</strong></RadzenText></RadzenRow>
-								<RadzenRow><RadzenText TextStyle="TextStyle.Body2">2 Ocak Pazar, 14.00-15.00</RadzenText></RadzenRow>
-							</RadzenColumn>
-						</RadzenRow> *@
 					</RadzenCard>
 				</RadzenColumn>
 			</RadzenRow>
@@ -352,5 +322,10 @@
 					Summary = "Mentor Silindi",
 					Duration = 4000
 				});
+	}
+
+	private void NavigateScheduler()
+	{
+		Navigation.NavigateTo("/admin-scheduler");
 	}
 }

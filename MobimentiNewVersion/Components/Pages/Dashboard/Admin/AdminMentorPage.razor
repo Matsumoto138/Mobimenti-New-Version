@@ -10,6 +10,8 @@
 <RadzenLayout Style="grid-template-areas: 'rz-sidebar rz-header' 'rz-sidebar rz-body'">
 	<AdminDashboardSidebarLayout />
 	<RadzenBody>
+		@* Mentor Table *@
+		<RadzenStack>
 		<RadzenDataGrid @ref=@mentorGrid Data="@mentors" TItem="Mentor" AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced"
 						AllowSorting="true" PageSize="20" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Center" ShowPagingSummary="true"
 						ColumnWidth="200px" LogicalFilterOperator="LogicalFilterOperator.Or">
@@ -31,12 +33,95 @@
 				</RadzenDataGridColumn>
 			</Columns>
 		</RadzenDataGrid>
+		</RadzenStack>
+		
+		@* Create Mentor *@
+		<RadzenStack class="rz-my-8">
+			<RadzenCard>
+				<RadzenRow>
+					<RadzenText TextStyle="TextStyle.DisplayH4">Mentor Oluştur</RadzenText>
+				</RadzenRow>
+				<RadzenRow>
+					<RadzenColumn Size="12" SizeMD="6" Style="display:flex; flex-direction:column">
+						<RadzenTemplateForm Data="@newMentor" TItem="Mentor" Style="display:flex; flex-direction:column; gap:10px">
+							<RadzenFormField Text="Profil Resmi">
+								<RadzenFileInput @bind-Value=@(newMentor.ProfilePicture) @bind-FileName=@fileName TValue="byte[]" Style="width:100%" MaxFileSize="3048576" />
+							</RadzenFormField>
+							<RadzenFormField Text="İsim">
+								<RadzenTextBox @bind-Value=@(newMentor.FirstName) />
+							</RadzenFormField>
+							<RadzenFormField Text="Soyisim">
+								<RadzenTextBox @bind-Value=@(newMentor.LastName) />
+							</RadzenFormField>
+							<RadzenFormField Text="Email">
+								<RadzenTextBox @bind-Value=@(newMentor.Email) />
+							</RadzenFormField>
+							<RadzenFormField Text="Şifre">
+								<RadzenTextBox @bind-Value=@(newMentor.Password) />
+							</RadzenFormField>
+							<RadzenFormField Text="Telefon">
+								<RadzenTextBox @bind-Value=@(newMentor.PhoneNumber) />
+							</RadzenFormField>
+							<RadzenFormField Text="LinkedIn">
+								<RadzenTextBox @bind-Value=@(newMentor.LinkedinAdress) />
+							</RadzenFormField>
+							<RadzenFormField Text="Mezun Olunan Üniversite">
+								<RadzenTextBox @bind-Value=@(newMentor.School) />
+							</RadzenFormField>
+						</RadzenTemplateForm>
+					</RadzenColumn>
+					<RadzenColumn Size="12" SizeMD="6" Style="display:flex; flex-direction:column">
+						<RadzenFormField Text="Title">
+							<RadzenTextBox @bind-Value=@(newMentor.Title) />
+						</RadzenFormField>
+						<RadzenFormField Text="Tanım">
+							<RadzenTextArea @bind-Value=@(newMentor.Description) Style="height:150px"/>
+						</RadzenFormField>
+						<RadzenCard Variant="Variant.Outlined" Style="display:flex; flex-direction:column; margin:1rem 0">
+							<RadzenText TextStyle="TextStyle.Body2" TextAlign="TextAlign.Center" class="rz-my-2" >Tecrübe</RadzenText>
+							<RadzenButton Click=@AddExperiencePopup Icon="add" Style="width:100%; opacity:65%; height:50px"  />
+							@if (newMentor.Experiences.Any())
+							{
+								<RadzenDataList Data="@(newMentor.Experiences)" TItem="Experience" PageSize="5">
+									<Template Context="experience">
+										<RadzenRow>
+											<RadzenColumn Size="10">
+												<RadzenText TextStyle="TextStyle.Body1">@experience.CompanyName</RadzenText>
+												<RadzenText TextStyle="TextStyle.Body2">@experience.Description</RadzenText>
+												<RadzenRow>
+													<RadzenText TextStyle="TextStyle.Caption">@experience.StartWorkingDate - @experience.EndWorkingDate</RadzenText>
+												</RadzenRow>
+											</RadzenColumn>
+											<RadzenColumn Size="2">
+												<RadzenButton Click="@(() => DeleteExperience(experience))" Icon="close" Variant="Variant.Text" />
+											</RadzenColumn>
+										</RadzenRow>
+									</Template>
+								</RadzenDataList>
+							}
+							
+						</RadzenCard>
+					</RadzenColumn>
+				</RadzenRow>
+				<RadzenRow Style="width:100%" class="rz-my-4" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center">
+					<RadzenButton Text="Mentor Oluştur" Click="CreateMentor" ButtonStyle="ButtonStyle.Info" Style="width:200px" />
+				</RadzenRow>
+			</RadzenCard>
+			
+		</RadzenStack>
 	</RadzenBody>
 </RadzenLayout>
 
 @code {
 	List<Mentor> mentors = new List<Mentor>();
 	RadzenDataGrid<Mentor> mentorGrid;
+	Mentor newMentor = new Mentor();
+	Experience newExperience = new Experience();
+
+	string fileName;
+	string resizedImageBase64;
+	bool isImageVisible = false;
+	bool stillWorking = false;
 
 
 	protected override async Task OnInitializedAsync()
@@ -69,7 +154,7 @@
 				{
 					Severity = NotificationSeverity.Success,
 					Summary = "İşlem Başarılı",
-					Detail = "Kullanıcı Silindi",
+					Detail = "Mentor Silindi",
 					Duration = 4000
 				});
 
@@ -78,6 +163,91 @@
 		catch (Exception e)
 		{
 			Console.WriteLine(e.Message);
+			throw;
+		}
+	}
+
+	async Task AddExperiencePopup()
+	{
+		var result = await DialogService.OpenAsync("Tecrübe ekleyin", ds =>
+	@<RadzenStack Gap="1.5rem">
+		<RadzenStack>
+			<RadzenFormField Text="Firma Adı">
+				<RadzenTextBox @bind-Value=@newExperience.CompanyName />
+			</RadzenFormField>
+			<RadzenFormField Text="Çalışılan Pozisyon">
+				<RadzenTextBox @bind-Value=@newExperience.Description />
+			</RadzenFormField>
+			<RadzenFormField Text="İşe Giriş Tarihi">
+				<RadzenDatePicker @bind-Value=@newExperience.StartWorkingDate ShowCalendarWeek />
+			</RadzenFormField>
+			<RadzenFormField Text="İşten Ayrılma Tarihi">
+				<RadzenDatePicker @bind-Value=@newExperience.EndWorkingDate ShowCalendarWeek />
+			</RadzenFormField>
+			<RadzenRow>
+				<RadzenCheckBox @bind-Value=@stillWorking Name="StillWorkingCheckBox" />
+				<RadzenLabel Text="Hâlâ Çalışıyorum" Component="StillWorkingCheckBox" class="rz-ms-2" />
+			</RadzenRow>
+		</RadzenStack>
+		<RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+			<RadzenStack Orientation="Orientation.Horizontal">
+				<RadzenButton Text="Ekle" Click="(() => {AddExperience();ds.Close(true);})" />
+				<RadzenButton Text="İptal" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Light" />
+			</RadzenStack>
+		</RadzenStack>
+	</RadzenStack>
+	);
+	}
+
+	private void AddExperience()
+	{
+		if (stillWorking)
+		{
+			newExperience.EndWorkingDate = null;
+			newMentor.Experiences.Add(newExperience);
+		}
+		else
+		{
+			newMentor.Experiences.Add(newExperience);
+		}
+		newExperience = new Experience();
+		stillWorking = false;
+	}
+	private void DeleteExperience(Experience experience)
+	{
+		newMentor.Experiences.Remove(experience);
+	}
+
+	private void CreateMentor()
+	{
+		newMentor.IsConfirmed=true;
+		newMentor.Role = "Mentor";
+		var hashPassword = BCrypt.Net.BCrypt.HashPassword(newMentor.Password);
+		newMentor.Password = hashPassword;
+		try
+		{
+			_mentorService.Add(newMentor);
+			NotificationService.Notify(new NotificationMessage
+				{
+					Severity = NotificationSeverity.Success,
+					Summary = "İşlem Başarılı",
+					Detail = "Mentor Eklendi",
+					Duration = 4000
+				});
+
+			mentorGrid.Reload();
+			newMentor = new Mentor();
+		}
+		catch (Exception e)
+		{
+			NotificationService.Notify(new NotificationMessage
+				{
+					Severity = NotificationSeverity.Warning,
+					Summary = "İşlem Başarısız",
+					Detail = e.Message,
+					Duration = 4000
+				});
+				Console.WriteLine(e.Message);
 			throw;
 		}
 	}

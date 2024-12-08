@@ -10,7 +10,7 @@ namespace MobimentiNewVersion.Entity.Concrete
     {
         public string CompanyName { get; set; } = string.Empty;
         public DateOnly StartWorkingDate { get; set; }
-        public DateOnly EndWorkingDate { get; set; }
+        public DateOnly? EndWorkingDate { get; set; }
         public string Description { get; set; } = string.Empty;
         public byte[]? CompanyLogo { get; set; } = null;
     }

@@ -1,0 +1,152 @@
+﻿@page "/admin-packages"
+@using MobimentiNewVersion.Business.Abstract
+@using MobimentiNewVersion.Components.Layout
+@using MobimentiNewVersion.Entity.Concrete
+@using Newtonsoft.Json
+
+@inject IPackageService _packageService;
+@inject DialogService DialogService
+@inject NotificationService NotificationService
+
+<RadzenLayout Style="grid-template-areas: 'rz-sidebar rz-header' 'rz-sidebar rz-body'">
+	<AdminDashboardSidebarLayout />
+	<RadzenBody>
+		<RadzenStack>
+			<RadzenStack>
+				<RadzenCard>
+					<RadzenRow><RadzenText TextStyle="TextStyle.DisplayH4">Paket Oluştur</RadzenText></RadzenRow>
+					<RadzenRow>
+					<RadzenColumn Size="12" SizeMD="6" Style="display:flex; flex-direction:column">
+						<RadzenFormField Text="Paket Adı">
+							<RadzenTextBox @bind-Value=@(newPackage.PackageName) />
+						</RadzenFormField>
+						<RadzenFormField Text="Fiyat">
+							<RadzenNumeric @bind-Value=@(newPackage.Price) />
+						</RadzenFormField>
+						<RadzenFormField Text="Görüşme Sayısı">
+							<RadzenNumeric @bind-Value=@(newPackage.SessionCount) />
+						</RadzenFormField>
+						<RadzenButton Text="Oluştur" ButtonStyle="ButtonStyle.Info" Click="CreatePackage" />
+					</RadzenColumn>
+					<RadzenColumn Size="12" SizeMD="6" Style="display:flex; flex-direction:column">
+						<RadzenFormField Text="Avantajlar" >
+							<RadzenColumn Style="display:flex; flex-direction:column">
+								<RadzenButton Click="AdvantagePopup" Icon="add" Variant="Variant.Outlined" ButtonStyle="ButtonStyle.Info" />
+							</RadzenColumn>
+						</RadzenFormField>
+						<RadzenCard Variant="Variant.Outlined">
+							@if (newAdvantages.Any())
+								{
+									<RadzenDataList Data=@newAdvantages>
+										<Template Context="advantage">
+											<RadzenRow>
+												<RadzenColumn Size="11">@advantage</RadzenColumn>
+												<RadzenColumn Size="1"><RadzenButton Click="@(() => RemoveAdvantage(advantage))" Icon="close" ButtonStyle="ButtonStyle.Danger" Variant="Variant.Text"/></RadzenColumn>
+											</RadzenRow>
+										</Template>
+									</RadzenDataList>
+								}
+						</RadzenCard>
+					</RadzenColumn>
+				</RadzenRow>
+				</RadzenCard>
+			</RadzenStack>
+			@* <RadzenStack>
+				<RadzenRow><RadzenText TextStyle="TextStyle.DisplayH4">Paketler</RadzenText></RadzenRow>
+				<RadzenStack>
+					<RadzenRow>
+						<RadzenDataList Data=@packages TItem="Package">
+							<Template Context="package">
+								<RadzenCard>
+									<RadzenRow><RadzenText TextStyle="TextStyle.DisplayH4">@package.PackageName</RadzenText></RadzenRow>
+									<RadzenRow><RadzenText TextStyle="TextStyle.DisplayH5">@package.Price</RadzenText></RadzenRow>
+									<RadzenRow><RadzenText TextStyle="TextStyle.DisplayH6">@package.SessionCount</RadzenText></RadzenRow>
+									@foreach (var advantage in package.Advantages)
+									{
+										<RadzenRow><RadzenText TextStyle="TextStyle.Body2">@advantage</RadzenText></RadzenRow>
+									}
+								</RadzenCard>
+							</Template>
+						</RadzenDataList>
+					</RadzenRow>
+				</RadzenStack>
+			</RadzenStack> *@
+		</RadzenStack>
+	</RadzenBody>
+
+</RadzenLayout>
+
+@code {
+	List<Package> packages = new List<Package>();
+	List<string> newAdvantages = new List<string>();
+
+	Package newPackage = new Package();
+	private string newAdvantage;
+
+	protected override async Task OnInitializedAsync()
+	{
+		await base.OnInitializedAsync();
+		// var stringPackages = _packageService.GetAll();
+		// packages = JsonConvert.SerializeObject<List<string>>(stringPackages);
+	}
+
+	private void AddAdvantage()
+	{
+		newAdvantages.Add(newAdvantage);
+		newAdvantage = "";
+	}
+
+	async Task AdvantagePopup()
+	{
+		var result = await DialogService.OpenAsync("Avantaj ekleyin", ds =>
+		@<RadzenStack Gap="1.5rem">
+			<RadzenStack>
+				<RadzenFormField Text="Avantaj">
+					<RadzenTextArea @bind-Value=@newAdvantage Style="height:100px" />
+				</RadzenFormField>
+			</RadzenStack>
+			<RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+				<RadzenStack Orientation="Orientation.Horizontal">
+				<RadzenButton Text="Ekle" Click="(() => {AddAdvantage();ds.Close(true);})" />
+					<RadzenButton Text="İptal" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Light" />
+				</RadzenStack>
+			</RadzenStack>
+		</RadzenStack>
+	);
+	}
+
+	private void RemoveAdvantage(string advantage)
+	{
+		newAdvantages.Remove(advantage);
+	}
+
+	private void CreatePackage()
+	{
+		newPackage.Advantages = newAdvantages;
+		try
+		{
+			_packageService.Add(newPackage);
+			NotificationService.Notify(new NotificationMessage
+				{
+					Severity = NotificationSeverity.Success,
+					Summary = "İşlem Başarılı",
+					Detail = "Paket Eklendi",
+					Duration = 4000
+				});
+				newPackage = new Package();
+				newAdvantages = new List<string>();
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine(e.Message);
+			NotificationService.Notify(new NotificationMessage
+				{
+					Severity = NotificationSeverity.Warning,
+					Summary = "Hata",
+					Detail = e.Message,
+					Duration = 4000
+				});
+			throw;
+		}
+	}
+}

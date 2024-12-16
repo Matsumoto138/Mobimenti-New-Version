@@ -11,11 +11,12 @@
 			<RadzenLink Text="Hakkımızda" Style="color: var(--darkFontColor)" />
 			<RadzenLink Text="Mentorlarımız" Style="color: var(--darkFontColor)" />
 			<RadzenLink Text="İletişim" Style="color: var(--darkFontColor)" />
+			<RadzenLink Text="MobiBlog" Style="color: var(--darkFontColor)" />
 
 	</RadzenColumn>
 		<RadzenColumn Size="2" SizeMD="3" Style="display:flex; justify-content:center" class="navbar-row">
 			<RadzenRow>
-				<RadzenButton Click="@(() => Navigate("/user-login"))" Text="Kaydol" Variant="Variant.Text" Icon="login" class="rz-border-color-primary rz-display-none rz-display-sm-block" Style="border-radius:20px" />
+				<RadzenButton Click="@(() => Navigate("/user-login"))" Text="Kaydol" ButtonStyle="ButtonStyle.Info" Icon="login" class="rz-border-color-primary rz-display-none rz-display-sm-block" Style="border-radius:20px" />
 				<RadzenSidebarToggle Click="@SidebarExpand" class="rz-display-sm-none rz-color-black" />
 			</RadzenRow>
 	</RadzenColumn>

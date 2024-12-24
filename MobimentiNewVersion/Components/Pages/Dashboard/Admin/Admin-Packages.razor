@@ -11,15 +11,18 @@
 <RadzenLayout Style="grid-template-areas: 'rz-sidebar rz-header' 'rz-sidebar rz-body'">
 	<AdminDashboardSidebarLayout />
 	<RadzenBody>
-		<RadzenStack>
+		<RadzenStack Gap="30">
 			<RadzenStack>
 				<RadzenCard>
 					<RadzenRow><RadzenText TextStyle="TextStyle.DisplayH4">Paket Oluştur</RadzenText></RadzenRow>
 					<RadzenRow>
-					<RadzenColumn Size="12" SizeMD="6" Style="display:flex; flex-direction:column">
+					<RadzenColumn Size="12" SizeMD="6" Style="display:flex; flex-direction:column; gap:10px">
 						<RadzenFormField Text="Paket Adı">
 							<RadzenTextBox @bind-Value=@(newPackage.PackageName) />
 						</RadzenFormField>
+							<RadzenFormField Text="Açıklama">
+								<RadzenTextArea Style="height:100px" @bind-Value=@(newPackage.Description) />
+							</RadzenFormField>
 						<RadzenFormField Text="Fiyat">
 							<RadzenNumeric @bind-Value=@(newPackage.Price) />
 						</RadzenFormField>
@@ -28,7 +31,7 @@
 						</RadzenFormField>
 						<RadzenButton Text="Oluştur" ButtonStyle="ButtonStyle.Info" Click="CreatePackage" />
 					</RadzenColumn>
-					<RadzenColumn Size="12" SizeMD="6" Style="display:flex; flex-direction:column">
+					<RadzenColumn Size="12" SizeMD="6" Style="display:flex; flex-direction:column; gap:10px">
 						<RadzenFormField Text="Avantajlar" >
 							<RadzenColumn Style="display:flex; flex-direction:column">
 								<RadzenButton Click="AdvantagePopup" Icon="add" Variant="Variant.Outlined" ButtonStyle="ButtonStyle.Info" />
@@ -51,26 +54,36 @@
 				</RadzenRow>
 				</RadzenCard>
 			</RadzenStack>
-			@* <RadzenStack>
+			<RadzenStack>
+				<RadzenCard>
 				<RadzenRow><RadzenText TextStyle="TextStyle.DisplayH4">Paketler</RadzenText></RadzenRow>
-				<RadzenStack>
 					<RadzenRow>
-						<RadzenDataList Data=@packages TItem="Package">
-							<Template Context="package">
-								<RadzenCard>
-									<RadzenRow><RadzenText TextStyle="TextStyle.DisplayH4">@package.PackageName</RadzenText></RadzenRow>
-									<RadzenRow><RadzenText TextStyle="TextStyle.DisplayH5">@package.Price</RadzenText></RadzenRow>
-									<RadzenRow><RadzenText TextStyle="TextStyle.DisplayH6">@package.SessionCount</RadzenText></RadzenRow>
-									@foreach (var advantage in package.Advantages)
-									{
-										<RadzenRow><RadzenText TextStyle="TextStyle.Body2">@advantage</RadzenText></RadzenRow>
-									}
-								</RadzenCard>
-							</Template>
-						</RadzenDataList>
+						@if (packages.Any())
+						{
+							<RadzenDataList Data=@packages TItem="Package" Style="display:flex">
+ 								<Template Context="package">
+									 <RadzenColumn Size="12" SizeMD="4">
+										 <RadzenRow JustifyContent="JustifyContent.SpaceBetween">
+											 <RadzenButton Click="@(() => EditPackagePopup(package))" Icon="edit" ButtonStyle="ButtonStyle.Info" Variant="Variant.Text" />
+											 <RadzenButton Click="@(() => DeletePackage(package))" Icon="delete" ButtonStyle="ButtonStyle.Danger" Variant="Variant.Text" />
+										 </RadzenRow>
+										<RadzenCard>
+											<RadzenRow><RadzenText TextStyle="TextStyle.DisplayH5">@package.PackageName</RadzenText></RadzenRow>
+											<RadzenRow><RadzenText TextStyle="TextStyle.DisplayH5">@package.Price ₺</RadzenText></RadzenRow>
+											<RadzenRow ><RadzenText TextStyle="TextStyle.DisplayH6">Görüşme Sayısı: @package.SessionCount</RadzenText></RadzenRow>
+											<RadzenRow Style="border-bottom:1px solid #2196f3; margin-bottom:1rem"><RadzenText TextStyle="TextStyle.Caption">@package.Description</RadzenText></RadzenRow>
+											@foreach (var advantage in package.Advantages)
+											{
+												<RadzenRow AlignItems="AlignItems.Center"><RadzenText TextStyle="TextStyle.Body2" Style="margin: auto 0; display:flex; align-items:center"><RadzenIcon Icon="adjust" IconColor="#5985E1" Style="opacity:0.3; margin:0.2rem 5px" />@advantage</RadzenText></RadzenRow>
+											}
+										</RadzenCard>
+									</RadzenColumn>
+								</Template>
+							</RadzenDataList>
+						}
 					</RadzenRow>
-				</RadzenStack>
-			</RadzenStack> *@
+				</RadzenCard>
+			</RadzenStack>
 		</RadzenStack>
 	</RadzenBody>
 
@@ -79,6 +92,7 @@
 @code {
 	List<Package> packages = new List<Package>();
 	List<string> newAdvantages = new List<string>();
+	List<string> editAdvantages = new List<string>();
 
 	Package newPackage = new Package();
 	private string newAdvantage;
@@ -86,7 +100,7 @@
 	protected override async Task OnInitializedAsync()
 	{
 		await base.OnInitializedAsync();
-		// var stringPackages = _packageService.GetAll();
+		packages = _packageService.GetAll();
 		// packages = JsonConvert.SerializeObject<List<string>>(stringPackages);
 	}
 
@@ -133,8 +147,140 @@
 					Detail = "Paket Eklendi",
 					Duration = 4000
 				});
-				newPackage = new Package();
-				newAdvantages = new List<string>();
+			newPackage = new Package();
+			newAdvantages = new List<string>();
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine(e.Message);
+			NotificationService.Notify(new NotificationMessage
+				{
+					Severity = NotificationSeverity.Warning,
+					Summary = "Hata",
+					Detail = e.Message,
+					Duration = 4000
+				});
+			throw;
+		}
+	}
+
+	private async Task EditPackagePopup(Package package)
+	{
+		Package editedPackage = new Package();
+		editedPackage = package;
+		editAdvantages = package.Advantages;
+		var result = await DialogService.OpenAsync("Paketi Düzenle", ds =>
+		@<RadzenStack Gap="1.5rem">
+			<RadzenStack Orientation="Orientation.Vertical">
+				<RadzenFormField Text="Paket Adı">
+							<RadzenTextBox @bind-Value=@(editedPackage.PackageName) />
+						</RadzenFormField>
+							<RadzenFormField Text="Açıklama">
+								<RadzenTextBox @bind-Value=@(editedPackage.Description) />
+							</RadzenFormField>
+						<RadzenFormField Text="Fiyat">
+							<RadzenNumeric @bind-Value=@(editedPackage.Price) />
+						</RadzenFormField>
+						<RadzenFormField Text="Görüşme Sayısı">
+							<RadzenNumeric @bind-Value=@(editedPackage.SessionCount) />
+						</RadzenFormField>
+						<RadzenFormField Text="Avantajlar" >
+							<RadzenColumn Style="display:flex; flex-direction:column">
+								<RadzenButton Click="AddEditAdvantagePopup" Icon="add" Variant="Variant.Outlined" ButtonStyle="ButtonStyle.Info" />
+							</RadzenColumn>
+						</RadzenFormField>
+						<RadzenCard Variant="Variant.Outlined">
+							@if (editAdvantages.Any())
+								{
+									<RadzenDataList Data=@editAdvantages>
+										<Template Context="advantage">
+											<RadzenRow>
+												<RadzenColumn Size="10">@advantage</RadzenColumn>
+												<RadzenColumn Size="2"><RadzenButton Click="@(() => RemoveEditAdvantage(advantage, package))" Icon="close" ButtonStyle="ButtonStyle.Danger" Variant="Variant.Text"/></RadzenColumn>
+											</RadzenRow>
+										</Template>
+									</RadzenDataList>
+								}
+						</RadzenCard>
+			<RadzenRow>
+				<RadzenButton Text="Ok" Click="() => {EditPackage(editedPackage, editAdvantages);ds.Close(true);}" Style="width: 80px;" />
+				<RadzenButton Text="Cancel" Click="() => {ds.Close(false); newAdvantages = new List<string>();}" ButtonStyle="ButtonStyle.Light" />
+			</RadzenRow>
+			</RadzenStack>
+	</RadzenStack>
+	);
+	}
+
+	private void EditPackage(Package package, List<string> editAdvantages)
+	{
+		package.Advantages = editAdvantages;
+		try
+		{
+			_packageService.Update(package);
+			NotificationService.Notify(new NotificationMessage
+				{
+					Severity = NotificationSeverity.Success,
+					Summary = "İşlem Başarılı",
+					Detail = "Paket Güncellendi",
+					Duration = 4000
+				});
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine(e.Message);
+			NotificationService.Notify(new NotificationMessage
+				{
+					Severity = NotificationSeverity.Warning,
+					Summary = "İşlem Başarısız",
+					Detail = e.Message,
+					Duration = 4000
+				});
+			throw;
+		}
+	}
+
+	private async Task RemoveEditAdvantage(string advantage, Package package)
+	{
+		editAdvantages.Remove(advantage);
+		DialogService.Close();
+		await EditPackagePopup(package);
+	}
+
+	private async Task AddEditAdvantagePopup()
+	{
+		var result = await DialogService.OpenAsync("Avantaj ekleyin", ds =>
+		@<RadzenStack Gap="1.5rem">
+			<RadzenStack>
+				<RadzenFormField Text="Avantaj">
+					<RadzenTextArea @bind-Value=@newAdvantage Style="height:100px" />
+				</RadzenFormField>
+			</RadzenStack>
+			<RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+				<RadzenStack Orientation="Orientation.Horizontal">
+					<RadzenButton Text="Ekle" Click="(() => {AddEditAdvantage();ds.Close(true);})" />
+					<RadzenButton Text="İptal" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Light" />
+				</RadzenStack>
+			</RadzenStack>
+		</RadzenStack>
+	);
+	}
+	private void AddEditAdvantage()
+	{
+		editAdvantages.Add(newAdvantage);
+		newAdvantage = "";
+	}
+	private void DeletePackage(Package package)
+	{
+		try
+		{
+			_packageService.Delete(package);
+			NotificationService.Notify(new NotificationMessage
+				{
+					Severity = NotificationSeverity.Success,
+					Summary = "İşlem Başarılı",
+					Detail = "Paket Silindi",
+					Duration = 4000
+				});
 		}
 		catch (Exception e)
 		{

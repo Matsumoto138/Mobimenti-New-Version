@@ -9,6 +9,7 @@ namespace MobimentiNewVersion.Entity.Concrete
     public class Package : BaseEntity
     {
         public string PackageName { get; set; }
+        public string Description { get; set; }
         public double Price { get; set; }
         public int SessionCount { get; set; }
         public List<string> Advantages { get; set; }

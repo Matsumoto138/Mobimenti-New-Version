@@ -1,0 +1,58 @@
+@page "/about-us"
+@using MobimentiNewVersion.Components.Layout
+
+
+<RadzenStack>
+    <RadzenRow><NavMenu /></RadzenRow>
+    <RadzenRow>
+        <RadzenColumn Size="12" SizeSM="6" OrderSM="1" Order="2">
+            <RadzenText Text="Biz Kimiz?" TextStyle="Radzen.Blazor.TextStyle.DisplayH4" />
+            <RadzenText>
+            Mobimenti, kariyer yolculuğunda hedeflediğin alanda birebir mentor bulacağın platformdur. <br/>
+            Gençlerin kariyer yolculuklarında rehberlik ve bilinçli planlama eksikliğini fark eden bir grup genç girişimci tarafından kurulmuştur. 
+            Dünyada genç bireylerin eğitim ve iş hayatında doğru rehberlik eksikliği nedeniyle yanlış kariyer ve iş seçimleri yapmalarını önlemeyi hedeflemekteyiz.<br/><br/>  
+            Mobimenti'nin misyonu gençleri mentorluk yöntemiyle kariyer planlamalarında etkili bir şekilde desteklemektir. 
+            Gençlerin potansiyellerini keşfetmelerine ve kariyerlerini şekillendirmelerine yardımcı olarak en iyi versiyonlarına ulaşmalarını sağlarız. 
+            Aynı zamanda, deneyimli yetişkinlerin biriktirdiği bilgi ve deneyimi mentorluk yoluyla paylaşarak bu değerli kaynakları geleceğe aktarmayı 
+            teşvik ederiz.  <br/><br/>
+            Mobimenti'nin vizyonu bilgi birikimi ve deneyimleri paylaşarak birbirini destekleyen ve sürekli gelişen global bir ağ oluşturmaktır.<br/><br/>  
+            Ana hedef kitlemiz, üniversite eğitimi alan ve iş hayatının henüz başlarında olan genç profesyonellerdir. 
+            İkincil hedef kitlemiz ise deneyimli uzman yetişkinlerdir, ki bunlar mentorluk yapabilecek yetkinliğe sahip kişilerdir.
+            </RadzenText>
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeSM="6" class="rz-display-flex" Order="1" OrderSM="2">
+            <RadzenImage Path="image\AboutPic1.png" Style="max-width: 90%; margin-right: auto; margin-left: auto"></RadzenImage>
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenRow Style="margin-top: 2rem">
+        <RadzenColumn Size="12" SizeSM="6" class="rz-display-flex">
+            <RadzenImage Path="image\AboutPic2.png" Style="max-width: 90%; text-align: center; margin-left: auto; margin-right: auto"></RadzenImage>
+        </RadzenColumn>
+        <RadzenColumn>
+            <RadzenText Text="Neden Mobimenti?" TextStyle="Radzen.Blazor.TextStyle.DisplayH4" />
+            <RadzenText Text="Mobimenti'yi seçmenin birçok nedeni var. İşte bunlardan bazıları:" />
+            <RadzenAccordion>
+                <Items>
+                    <RadzenAccordionItem Expanded="True" Text="Gençlerin kariyer ve kişisel gelişimine odaklanıyoruz">
+                        <RadzenText Text="Mobimenti, gençlerin kariyerlerini doğru biçimde şekillendirmelerine ve potansiyellerini maksimize etmelerine yardımcı olmak için kurulmuştur." />
+                    </RadzenAccordionItem>
+                    <RadzenAccordionItem Expanded="True" Text="Güvenilir ve nitelikli mentorlar">
+                        <RadzenText Text="Platformumuzda, çeşitli sektörlerden deneyimli ve uzman mentorlar bulunmaktadır. Bu mentorlar, gençlerin kariyerleri hakkında değerli rehberlik sunmaktadır." />
+                    </RadzenAccordionItem>
+                    <RadzenAccordionItem Expanded="True" Text="Kişiselleştirilmiş hizmet">
+                        <RadzenText Text="Mobimenti, kullanıcılarına kişiselleştirilmiş mentorluk deneyimi sunar. Tercihe yönelik olarak kullanıcının ihtiyaçlarına ve hedeflerine uygun mentorlarla eşleştirilmesini sağlar" />
+                    </RadzenAccordionItem>
+                    <RadzenAccordionItem Expanded="True" Text="Erişilebilirlik ve kolaylık">
+                        <RadzenText Text="Platformumuz, gençlerin ve yetişkinlerin kolayca erişebileceği ve kullanabileceği bir arayüze sahiptir. Böylece, kariyer gelişimlerini herhangi bir zamanda ve herhangi bir yerden yönetmelerini sağlar." />
+                    </RadzenAccordionItem>
+                </Items>
+
+            </RadzenAccordion>
+            <RadzenText Text="Mobimenti, gençlerin kariyerlerinde başarılı olmalarına yardımcı olmak için buradadır. Siz de bizimle birlikte kariyer yolculuğunu geliştirmek için hemen Mobimenti'ye katılın!" Style="margin-top: 2rem" />
+        </RadzenColumn>
+    </RadzenRow>
+</RadzenStack>
+
+@code {
+
+}

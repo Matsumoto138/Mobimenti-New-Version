@@ -1,0 +1,59 @@
+﻿@page  "/pricing"
+@using MobimentiNewVersion.Business.Abstract
+@using MobimentiNewVersion.Components.Layout
+@using MobimentiNewVersion.Entity.Concrete
+
+@inject IPackageService _packageService
+
+
+<RadzenStack>
+	<RadzenRow><NavMenu /></RadzenRow>
+	<RadzenStack Style="height:50vh; background: linear-gradient(210deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,7,255,1) 100%); border-radius:20px; margin-bottom:30px; padding:1rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center">
+		<RadzenText TextStyle="TextStyle.DisplayH2" TextAlign="TextAlign.Center" Style="color:white">Uzman mentörlerle geleceğinizi inşa edin</RadzenText>
+	</RadzenStack>
+	<RadzenRow Style="width:80%; margin:20px auto" JustifyContent="JustifyContent.Center">
+		<RadzenText TextStyle="TextStyle.DisplayH5" TextAlign="TextAlign.Center">
+			Kariyer yolculuğunuzda size rehberlik edecek mentörlerle tanışın. Hedeflerinize uygun paketimizi seçin ve geleceğinizi şekillendirme yolunda ilk adımı atın!
+			</RadzenText>
+	</RadzenRow>
+	<RadzenStack>
+		<RadzenRow Gap="0">
+			@foreach (var package in packages)
+			{
+				<RadzenCard Style=" margin:0 auto; background:#f2f6ff">
+					<RadzenColumn Style="width:90%; margin:0 auto">
+						<RadzenStack Style="min-height:300px; margin-bottom:30px" JustifyContent="JustifyContent.SpaceBetween">
+							<RadzenRow><RadzenText TextStyle="TextStyle.DisplayH4" Style="font-weight:500; margin:0 auto" TextAlign="TextAlign.Center">@package.PackageName</RadzenText></RadzenRow>
+							<RadzenRow><RadzenText TextStyle="TextStyle.Subtitle2" Style="margin:1rem auto; opacity:0.8" TextAlign="TextAlign.Center">@package.Description</RadzenText></RadzenRow>
+							<RadzenRow JustifyContent="JustifyContent.Center" Style="margin-bottom:1rem">
+								<RadzenText TextStyle="TextStyle.DisplayH3" Style="font-weight:500">@package.Price ₺</RadzenText>
+	@* 							<RadzenText TextStyle="TextStyle.Body1" Style="margin:auto 0 auto 10px">/ aylık</RadzenText>
+	 *@						</RadzenRow>
+							<RadzenRow JustifyContent="JustifyContent.Center" Style="bottom:0"><RadzenButton Icon="shopping_cart" Text="Satın Al" ButtonStyle="ButtonStyle.Info" /></RadzenRow>
+						</RadzenStack>
+						@foreach (var advantage in package.Advantages)
+						{
+							<RadzenRow AlignItems="AlignItems.Center" Style="margin:10px 0">
+								<RadzenText TextStyle="TextStyle.Body1" Style="margin: auto 0; display:flex; align-items:center; font-weight:500">
+									<RadzenIcon Icon="check" IconColor="#5985E1" Style="margin:0.2rem 5px; opacity:0.7;" />
+									@advantage
+								</RadzenText>
+							</RadzenRow>
+						}
+					</RadzenColumn>
+				</RadzenCard>
+			}
+		</RadzenRow>
+	</RadzenStack>
+</RadzenStack>
+
+@code {
+	List<Package> packages = new List<Package>();
+
+	protected override async Task OnInitializedAsync()
+	{
+		await base.OnInitializedAsync();
+
+		packages = _packageService.GetAll().OrderBy(p => p.Price).ToList();
+	}
+}
